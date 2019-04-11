@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import './assets/images.dart';
 
-void main() => runApp(MainPage());
+void main() {
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: MainPage(),
+  ));
+}
 
 class MainPage extends StatefulWidget {
   @override
@@ -20,62 +25,63 @@ class MainState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Desenvolvimento de Aplicativos"),
-        ),
-        floatingActionButton: Container(
+    return Scaffold(
+      appBar: new AppBar(
+        title: new Text("Desenvolvimento de Aplicativos"),
+      ),
+      floatingActionButton: Container(
           width: 335,
           height: 70,
-            child: new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            FloatingActionButton(
-              child: new Text("Enter"),
-              onPressed: () {
-                print("Loading...");
-                setState(() {
-                  _click = false;
-                });
-              },
-            ),
-            FloatingActionButton(
-              child: Icon(Icons.refresh, color: Colors.white),
-              backgroundColor: Colors.red,
-              onPressed: () {
-                print("Loading...2");
-                setState(() {
-                  _click = true;
-                });
-              },
-            ),
-            Text("O Giordano \né desumilde"),
-            Container(
-              width: 50,
-              height: 50,
-              child: new Image.asset('assets/bluecircle.png'),
-            )
-          ],
-        )),
-        body: new Center(
-          child: _click
-              ? new CircularProgressIndicator()
-              : new FlatButton(
-                  child: new TestImageWidget("redcircle.png"),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ClickedState()),
-                    );
-                  }),
-        ),
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              FloatingActionButton(
+                heroTag: "btn1",
+                child: new Text("Enter"),
+                onPressed: () {
+                  print("Loading...");
+                  setState(() {
+                    _click = false;
+                  });
+                },
+              ),
+              FloatingActionButton(
+                heroTag: "btn2",
+                child: Icon(Icons.refresh, color: Colors.white),
+                backgroundColor: Colors.red,
+                onPressed: () {
+                  print("Loading...2");
+                  setState(() {
+                    _click = true;
+                  });
+                },
+              ),
+              Text("O Giordano \né desumilde"),
+              Container(
+                width: 50,
+                height: 50,
+                child: new Image.asset('assets/bluecircle.png'),
+              ),
+            ],
+          )),
+      body: new Center(
+        child: _click
+            ? new CircularProgressIndicator()
+            : new FlatButton(
+                child: new TestImageWidget("redcircle.png"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(builder: (context) => new TestStateLess()),
+                  );
+                },
+              ),
       ),
     );
   }
 }
 
-class ClickedState extends StatelessWidget {
+class TestStateLess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -84,8 +90,7 @@ class ClickedState extends StatelessWidget {
         backgroundColor: Colors.red,
       ),
       body: new Center(
-        child: new FlatButton(
-            child: new TestImageWidget("bluecircle.png"), onPressed: () {}),
+        child: new Text("Estou testando"),
       ),
     );
   }
