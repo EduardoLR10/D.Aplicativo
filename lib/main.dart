@@ -4,7 +4,6 @@ import './assets/images.dart';
 import 'introducao.dart';
 //Import necessário para rodar meu app
 import 'package:english_words/english_words.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -27,7 +26,7 @@ class MainState extends State<MainPage> {
       child: MyScaffold(),
       decoration: new BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage('assets/norman.png'),
+          image: new AssetImage('assets/wallpaper.png'),
           fit: BoxFit.fill,
         ),
       ),
@@ -95,11 +94,6 @@ class MyScaffoldState extends State<MyScaffold> {
                   );
                 },
               ),
-              Container(
-                width: 50,
-                height: 50,
-                child: new Image.asset('assets/bluecircle.png'),
-              ),
             ],
           )),
       body: new Center(
@@ -156,7 +150,7 @@ class TestStateLess extends StatelessWidget {
         backgroundColor: Colors.red,
       ),
       body: new Center(
-        child: new Text("Estou testando"),
+        child: new TestImageWidget("bluecircle.png"),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'btn3',
