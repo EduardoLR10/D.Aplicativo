@@ -18,6 +18,28 @@ class MainPage extends StatefulWidget {
 }
 
 class MainState extends State<MainPage> {
+  @override
+  Widget build (BuildContext context) {
+    return Container(
+      child: MyScaffold(),
+      decoration: new BoxDecoration(
+        image: new DecorationImage(
+          image: new AssetImage('assets/norman.png'),
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+}
+
+class MyScaffold extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return new MyScaffoldState();
+  }
+}
+
+class MyScaffoldState extends State<MyScaffold> {
   var _click = true;
 
   @override
@@ -28,6 +50,7 @@ class MainState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: MyAppBar(
         title: new Text("Desenvolvimento de Aplicativos"),
       ),
@@ -70,14 +93,14 @@ class MainState extends State<MainPage> {
         child: _click
             ? new CircularProgressIndicator()
             : new FlatButton(
-                child: new TestImageWidget("redcircle.png"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    new MaterialPageRoute(builder: (context) => new TestStateLess()),
-                  );
+              child: new TestImageWidget("redcircle.png"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(builder: (context) => new TestStateLess()),
+                );
                 },
-              ),
+            ),
       ),
     );
   }
