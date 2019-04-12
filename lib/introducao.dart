@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 
-SystemChrome.setEnabledSystemUIOverlays([]);
-
 class Intro extends StatelessWidget {
 
   @override
