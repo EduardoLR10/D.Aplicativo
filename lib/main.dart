@@ -81,7 +81,17 @@ class MyScaffoldState extends State<MyScaffold> {
                   });
                 },
               ),
-              Text("O Giordano \né desumilde"),
+              FloatingActionButton(
+                heroTag: 'btn3',
+                child: Text('Giordano'),
+                backgroundColor: Colors.green,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TestStateLess()),
+                  );
+                },
+              ),
               Container(
                 width: 50,
                 height: 50,
@@ -91,8 +101,7 @@ class MyScaffoldState extends State<MyScaffold> {
           )),
       body: new Center(
         child: _click
-            ? new CircularProgressIndicator()
-            : new FlatButton(
+            ? new CircularProgressIndicator() : new FlatButton(
               child: new TestImageWidget("redcircle.png"),
               onPressed: () {
                 Navigator.push(
@@ -140,17 +149,25 @@ class TestStateLess extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Mudou para azul!"),
+        title: new Text("Mudou para amarelo!"),
         backgroundColor: Colors.red,
       ),
       body: new Center(
         child: new Text("Estou testando"),
       ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'btn3',
+        child: Text('Back'),
+        backgroundColor: Colors.green,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }
 
-
+//Aplicativo do tutorial não utilizado
 
 void second_main() => runApp(MyApp());
 
