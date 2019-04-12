@@ -9,25 +9,46 @@ class Intro extends StatelessWidget {
     return Scaffold( // Widget do MaterialApp
       //appBar: IntroAppBar(),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
-          Row(
-            children: <Widget> [
+          Container(
+            width: 360,
+            height: 48,
+            alignment: Alignment.topLeft,
+            child:
               IconButton (
                 icon: IconIntro(),
                 tooltip:  'Menu',
                 onPressed: null,
               ),
-            ]
           ),
-          Container(child:
-            Text(
-              'Nois geral aqui',
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text(
+              'Olá!',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontStyle: FontStyle.),
+              style: TextStyle(
+                fontFamily: 'Courgette',
+                color: Color(0xffffd358),
+                fontSize: 72.0,
+              ),
             )
           ),
-          Text('Textão'),
+          Container(
+            margin: EdgeInsets.fromLTRB(48, 44, 48, 42),
+            child: Text(
+              'Bem vindo ao Meau!\nAqui você pode adotar, doar e ajudar\n'
+                  'cães e gatos com facilidade.\nQual o seu interesse?',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                color: Color(0xff757575),
+                fontSize: 16.0,
+              ),
+            )
+          ),
           Column(
             children: <Widget> [
               IntroButton(
