@@ -3,9 +3,11 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 
 class Intro extends StatelessWidget {
-
   @override
   Widget build(BuildContext context)  {
+
+  SystemChrome.setEnabledSystemUIOverlays([]);
+
     return Scaffold( // Widget do MaterialApp
       //appBar: IntroAppBar(),
       body: Column(
@@ -94,6 +96,7 @@ class Intro extends StatelessWidget {
         child: Text('Back'),
         backgroundColor: Colors.green,
         onPressed: () {
+          SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
           Navigator.pop(context);
         },
       ),
