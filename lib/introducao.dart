@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import './assets/images.dart';
+import 'package:flutter/services.dart';
+
+SystemChrome.setEnabledSystemUIOverlays([]);
 
 class Intro extends StatelessWidget {
 
@@ -52,15 +54,38 @@ class Intro extends StatelessWidget {
           Column(
             children: <Widget> [
               IntroButton(
-                name: Text ('ADOTAR'),
+                name: TextButIntro ('ADOTAR'),
               ),
               IntroButton(
-                name: Text ('AJUDAR'),
+                name: TextButIntro ('AJUDAR'),
               ),
               IntroButton(
-                name: Text ('CADASTRAR ANIMAL'),
+                name: TextButIntro ('CADASTRAR ANIMAL'),
               ),
             ]
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 38),
+            child: Text(
+              'login',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                color: Color(0xff88c9bf),
+                fontSize: 16.0,
+              ),
+            )
+          ),
+          Container(
+            width: 122,
+            height: 44,
+            //margin: EdgeInsets.fromLTRB(0, 30, 0, 32),
+            alignment: Alignment.center,
+            child: Image.asset(
+              'assets/Meau_marca_2.png',
+              fit: BoxFit.fill,
+            ),
           ),
         ],
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,9 +111,6 @@ class IntroButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector (
-      onTap: () {
-        print('Apertou aqui');
-      },
       child: Container(
         height: 40.0,
         width: 232.0,
@@ -124,6 +146,26 @@ class IconIntro extends StatelessWidget {
         size: 24.0,
       ),
       child: new Icon(Icons.menu),
+    );
+  }
+}
+
+class TextButIntro extends StatelessWidget {
+  TextButIntro(this.string);
+
+  final String string;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text (
+          string,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            color: Color(0xff434343),
+            fontSize: 12.0,
+          ),
     );
   }
 }
