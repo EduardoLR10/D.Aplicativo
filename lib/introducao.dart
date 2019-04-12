@@ -6,22 +6,36 @@ class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context)  {
     return Scaffold( // Widget do MaterialApp
-      appBar: MyAppBar(
-        title:  Text(
-          'Example title',
-          style: Theme.of(context) .primaryTextTheme.title,
-        ),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget> [
-            Divider(),
-            Text('Nois geral aqui'),
-            Divider(),
-            MyButton(),
-          ],
-          crossAxisAlignment: CrossAxisAlignment.center,
-        ),
+      //appBar: IntroAppBar(),
+      body: Column(
+        children: <Widget> [
+          Row(
+            children: <Widget> [
+              IconButton (
+                icon: IconIntro(),
+                tooltip:  'Menu',
+                onPressed: null,
+              ),
+            ]
+          ),
+          Text('Nois geral aqui'),
+          Text('Textão'),
+          Column(
+            mainAxisAlignment:,
+            children: <Widget> [
+              IntroButton(
+                name: Text ('ADOTAR'),
+              ),
+              IntroButton(
+                name: Text ('AJUDAR'),
+              ),
+              IntroButton(
+                name: Text ('CADASTRAR ANIMAL'),
+              ),
+            ]
+          ),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.center,
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -36,36 +50,11 @@ class Intro extends StatelessWidget {
   }
 }
 
-class MyAppBar extends StatelessWidget implements PreferredSizeWidget{ //Lidando com o AppBar do MaterialApp separadamente
-  MyAppBar({this.title});
+class IntroButton extends StatelessWidget {
+  IntroButton({this.name});
 
-  final Widget title;
+  final Widget name;
 
-  @override
-  Size get preferredSize => new Size.fromHeight(kToolbarHeight); //Possibilita a classe ser tratada como AppBar
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: title,
-      leading:
-      IconButton (
-        icon: Icon(Icons.menu),
-        tooltip:  'Menu',
-        onPressed: null,
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          tooltip: 'Buscar',
-          onPressed: null,
-        )
-      ],
-    );
-  }
-}
-
-class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector (
@@ -73,17 +62,30 @@ class MyButton extends StatelessWidget {
         print('Apertou aqui');
       },
       child: Container(
-        height: 36.0,
+        height: 40.0,
+        width: 232.0,
         padding: const EdgeInsets.all(8.0),
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          color: Colors.lightGreen,
+          borderRadius: BorderRadius.circular(2.0),
+          color: Color(0xffffd358),
         ),
         child: Center(
-          child: Text('Clica'),
+          child: name,
         ),
       ),
+    );
+  }
+}
+
+class IconIntro extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconTheme(
+      data: new IconThemeData(
+        color: Color(0xff88c9bf),
+      ),
+      child: new Icon(Icons.menu),
     );
   }
 }
