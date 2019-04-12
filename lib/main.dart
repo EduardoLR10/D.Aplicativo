@@ -28,7 +28,7 @@ class MainState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
+      appBar: MyAppBar(
         title: new Text("Desenvolvimento de Aplicativos"),
       ),
       floatingActionButton: Container(
@@ -50,7 +50,7 @@ class MainState extends State<MainPage> {
               FloatingActionButton(
                 heroTag: "btn2",
                 child: Icon(Icons.refresh, color: Colors.white),
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.green,
                 onPressed: () {
                   print("Loading...2");
                   setState(() {
@@ -79,6 +79,35 @@ class MainState extends State<MainPage> {
                 },
               ),
       ),
+    );
+  }
+}
+
+class MyAppBar extends StatelessWidget implements PreferredSizeWidget{ //Lidando com o AppBar do MaterialApp separadamente
+  MyAppBar({this.title});
+
+  final Widget title;
+
+  @override
+  Size get preferredSize => new Size.fromHeight(kToolbarHeight); //Possibilita a classe ser tratada como AppBar
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: title,
+      leading:
+      IconButton (
+        icon: Icon(Icons.menu),
+        tooltip:  'Menu',
+        onPressed: null,
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.search),
+          tooltip: 'Buscar',
+          onPressed: null,
+        )
+      ],
     );
   }
 }
