@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import './assets/images.dart';
 
 class Intro extends StatelessWidget {
@@ -18,10 +19,16 @@ class Intro extends StatelessWidget {
               ),
             ]
           ),
-          Text('Nois geral aqui'),
+          Container(child:
+            Text(
+              'Nois geral aqui',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontStyle: FontStyle.),
+            )
+          ),
           Text('Textão'),
           Column(
-            mainAxisAlignment:,
             children: <Widget> [
               IntroButton(
                 name: Text ('ADOTAR'),
@@ -64,9 +71,18 @@ class IntroButton extends StatelessWidget {
       child: Container(
         height: 40.0,
         width: 232.0,
-        padding: const EdgeInsets.all(8.0),
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 6.0),
         decoration: BoxDecoration(
+          boxShadow: [BoxShadow(
+            color: Colors.black38,
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+            offset: Offset(
+              0.0,
+              1.0,
+              ),
+            )
+          ],
           borderRadius: BorderRadius.circular(2.0),
           color: Color(0xffffd358),
         ),
@@ -84,6 +100,7 @@ class IconIntro extends StatelessWidget {
     return IconTheme(
       data: new IconThemeData(
         color: Color(0xff88c9bf),
+        size: 24.0,
       ),
       child: new Icon(Icons.menu),
     );
