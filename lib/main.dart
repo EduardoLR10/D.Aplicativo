@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import './assets/images.dart';
-//Proxima tela
-import 'introducao.dart';
-//Import necessário para rodar meu app
-import 'package:english_words/english_words.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -22,246 +19,165 @@ class MainPage extends StatefulWidget {
 class MainState extends State<MainPage> {
   @override
   Widget build (BuildContext context) {
-    return Container(
-      child: MyScaffold(),
-      decoration: new BoxDecoration(
-        image: new DecorationImage(
-          image: new AssetImage('assets/wallpaper.png'),
-          fit: BoxFit.fill,
+    return Intro();
+  }
+}
+
+class Intro extends StatelessWidget {
+  @override
+  Widget build(BuildContext context)  {
+
+  SystemChrome.setEnabledSystemUIOverlays([]);
+
+    return Scaffold( // Widget do MaterialApp
+      //appBar: IntroAppBar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget> [
+          Container(
+            width: 360,
+            height: 48,
+            alignment: Alignment.topLeft,
+            child:
+              IconButton (
+                icon: IconIntro(),
+                tooltip:  'Menu',
+                onPressed: null,
+              ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text(
+              'Olá!',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Courgette',
+                color: Color(0xffffd358),
+                fontSize: 72.0,
+              ),
+            )
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(48, 44, 48, 42),
+            child: Text(
+              'Bem vindo ao Meau!\nAqui você pode adotar, doar e ajudar\n'
+                  'cães e gatos com facilidade.\nQual o seu interesse?',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                color: Color(0xff757575),
+                fontSize: 16.0,
+              ),
+            )
+          ),
+          Column(
+            children: <Widget> [
+              IntroButton(
+                name: TextButIntro ('ADOTAR'),
+              ),
+              IntroButton(
+                name: TextButIntro ('AJUDAR'),
+              ),
+              IntroButton(
+                name: TextButIntro ('CADASTRAR ANIMAL'),
+              ),
+            ]
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 38),
+            child: Text(
+              'login',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                color: Color(0xff88c9bf),
+                fontSize: 16.0,
+              ),
+            )
+          ),
+          Container(
+            width: 122,
+            height: 44,
+            //margin: EdgeInsets.fromLTRB(0, 30, 0, 32),
+            alignment: Alignment.center,
+            child: Image.asset(
+              'assets/Meau_marca_2.png',
+              fit: BoxFit.fill,
+            ),
+          ),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.center,
+      ),
+    );
+  }
+}
+
+class IntroButton extends StatelessWidget {
+  IntroButton({this.name});
+
+  final Widget name;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector (
+      child: Container(
+        height: 40.0,
+        width: 232.0,
+        margin: const EdgeInsets.symmetric(vertical: 6.0),
+        decoration: BoxDecoration(
+          boxShadow: [BoxShadow(
+            color: Colors.black38,
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+            offset: Offset(
+              0.0,
+              1.0,
+              ),
+            )
+          ],
+          borderRadius: BorderRadius.circular(2.0),
+          color: Color(0xffffd358),
+        ),
+        child: Center(
+          child: name,
         ),
       ),
     );
   }
 }
 
-class MyScaffold extends StatefulWidget {
+class IconIntro extends StatelessWidget {
   @override
-  State<StatefulWidget> createState() {
-    return new MyScaffoldState();
+  Widget build(BuildContext context) {
+    return IconTheme(
+      data: new IconThemeData(
+        color: Color(0xff88c9bf),
+        size: 24.0,
+      ),
+      child: new Icon(Icons.menu),
+    );
   }
 }
 
-class MyScaffoldState extends State<MyScaffold> {
-  var _click = true;
+class TextButIntro extends StatelessWidget {
+  TextButIntro(this.string);
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  final String string;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: MyAppBar(
-        title: new Text("Desenvolvimento de Aplicativos"),
-      ),
-      floatingActionButton: Container(
-          width: 335,
-          height: 70,
-          child: new Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              FloatingActionButton(
-                heroTag: "btn1",
-                child: new Text("Enter"),
-                onPressed: () {
-                  print("Loading...");
-                  setState(() {
-                    _click = false;
-                  });
-                },
-              ),
-              FloatingActionButton(
-                heroTag: "btn2",
-                child: Icon(Icons.refresh, color: Colors.white),
-                backgroundColor: Colors.green,
-                onPressed: () {
-                  print("Loading...2");
-                  setState(() {
-                    _click = true;
-                  });
-                },
-              ),
-              FloatingActionButton(
-                heroTag: 'btn3',
-                child: Text('APP'),
-                backgroundColor: Colors.green,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Intro()),
-                  );
-                },
-              ),
-            ],
-          )),
-      body: new Center(
-        child: _click
-            ? new CircularProgressIndicator() : new FlatButton(
-              child: new TestImageWidget("redcircle.png"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => new TestStateLess()),
-                );
-              },
-            ),
-      ),
+    return Text (
+          string,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            color: Color(0xff434343),
+            fontSize: 12.0,
+          ),
     );
   }
-}
-
-class MyAppBar extends StatelessWidget implements PreferredSizeWidget{ //Lidando com o AppBar do MaterialApp separadamente
-  MyAppBar({this.title});
-
-  final Widget title;
-
-  @override
-  Size get preferredSize => new Size.fromHeight(kToolbarHeight); //Possibilita a classe ser tratada como AppBar
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: title,
-      leading:
-      IconButton (
-        icon: Icon(Icons.menu),
-        tooltip:  'Menu',
-        onPressed: null,
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          tooltip: 'Buscar',
-          onPressed: null,
-        )
-      ],
-    );
-  }
-}
-
-class TestStateLess extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Mudou para amarelo!"),
-        backgroundColor: Colors.red,
-      ),
-      body: new Center(
-        child: new TestImageWidget("bluecircle.png"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'btn3',
-        child: Text('Back'),
-        backgroundColor: Colors.green,
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    );
-  }
-}
-
-//Aplicativo do tutorial não utilizado ---------------------------------
-
-void second_main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Primeiro_Flutter Name Generator',
-      theme: new ThemeData(
-        primaryColor: Colors.white,
-      ),
-      home: RandomWords(),
-    );
-  }
-}
-
-class RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final Set<WordPair> _saved = new Set<WordPair>();
-  final _biggerFont = const TextStyle(fontSize: 20.0);
-  Widget _buildSuggestions(){
-    return ListView.builder(padding: const EdgeInsets.all(16.0),
-        itemBuilder: /*1*/ (context,i){
-          if(i.isOdd) return Divider(); /*2*/
-
-          final index = i ~/ 2; /*3*/
-          if(index >= _suggestions.length){
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return _buildRow(_suggestions[index]);
-        } );
-  }
-
-  Widget _buildRow(WordPair pair) {
-    final alreadySaved = _saved.contains(pair);
-    return new ListTile(
-      title: new Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-      trailing: new Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: (){
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title:
-      Text('Primeiro_Flutter Name Generator'),
-        actions: <Widget>[
-          new IconButton(icon: const Icon(Icons.list), onPressed: _pushSaved),
-        ],
-      ),
-      body: _buildSuggestions(),
-    );
-  }
-  void _pushSaved(){
-    Navigator.of(context).push(
-      new MaterialPageRoute<void>(
-        builder: (BuildContext context){
-          final Iterable<ListTile> tiles = _saved.map(
-                (WordPair pair){
-              return new ListTile(
-                title: new Text(pair.asPascalCase,style: _biggerFont,),
-              );
-            },
-          );
-          final List<Widget> divided = ListTile
-              .divideTiles(context: context, tiles: tiles,)
-              .toList();
-          return new Scaffold(
-            appBar: new AppBar(
-              title: const Text('Saved suggestions'),
-            ),
-            body: new ListView(children: divided),
-          );
-        },
-      ),
-    );
-  }
-
-
-}
-
-class RandomWords extends StatefulWidget {
-  @override
-  RandomWordsState createState() => new RandomWordsState();
 }
