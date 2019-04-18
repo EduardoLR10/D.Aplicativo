@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
 
-class TestImageWidget extends StatelessWidget {
+class CustomImageWidget extends StatelessWidget {
   final nameofimage;
+  final widthimage;
+  final heightimage;
 
-  TestImageWidget(this.nameofimage);
+  CustomImageWidget(this.nameofimage, this.widthimage, this.heightimage);
 
   @override
   Widget build(BuildContext context) {
     return new Align(
       alignment: Alignment(0, -0.5),
       child: new Container(
-        width: 300,
-        height: 300,
+        width: this.widthimage,
+        height: this.heightimage,
         alignment: Alignment.topLeft,
         decoration: new BoxDecoration(
           image: new DecorationImage(

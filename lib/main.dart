@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 
+import './adotar.dart';
+
 void main() {
   runApp(MaterialApp(
-    title: 'Navigation Basics',
+    title: 'MEAU',
+    routes: {
+      'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
+    },
     home: MainPage(),
   ));
 }
@@ -74,14 +79,25 @@ class Intro extends StatelessWidget {
           ),
           Column(
             children: <Widget> [
-              IntroButton(
+              FlatButton(
+                child: IntroButton(
                 name: TextButIntro ('ADOTAR'),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, 'ADOTARPAGE1');
+                }, 
               ),
-              IntroButton(
+              FlatButton(
+                child: IntroButton(
                 name: TextButIntro ('AJUDAR'),
+                ),
+                onPressed: null,
               ),
-              IntroButton(
+              FlatButton(
+                child: IntroButton(
                 name: TextButIntro ('CADASTRAR ANIMAL'),
+                ),
+                onPressed: null,
               ),
             ]
           ),
