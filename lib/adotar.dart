@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'assets/images.dart';
+import './adotar2.dart';
 
 class AdotarPage extends StatefulWidget {
   @override
@@ -68,6 +69,7 @@ class AnimalCard extends StatelessWidget {
               new Container(
                 width: 344,
                 height: 32,
+                padding: new EdgeInsets.all(0.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(4.0),
@@ -99,7 +101,13 @@ class AnimalCard extends StatelessWidget {
               new FlatButton(
                 padding: new EdgeInsets.all(0.0),
                 onPressed: () {
-                  print('Cliquei2');
+                  Navigator.push(context, 
+                          new MaterialPageRoute(
+                            builder: (context) => new AdotarState2(
+                              this.animalname, this.animalimagename, 
+                              this.genre, this.size, this.status, this.location),
+                          )
+                        );
                 },
                 child: new Column(
                   children: <Widget>[

@@ -3,6 +3,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 
 import './adotar.dart';
+//import './adotar2.dart';
 
 void main() {
   runApp(MaterialApp(
