@@ -41,9 +41,9 @@ class Intro extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
           Container(
+            alignment: Alignment.centerLeft,
             width: 360,
             height: 48,
-            alignment: Alignment.topLeft,
             child:
               IconButton (
                 icon: IconIntro(),
@@ -51,8 +51,11 @@ class Intro extends StatelessWidget {
                 onPressed: null,
               ),
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.0),
+          ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 8.0),
+            alignment: Alignment.center,
             child: Text(
               'Olá!',
               textAlign: TextAlign.center,
@@ -64,8 +67,11 @@ class Intro extends StatelessWidget {
               ),
             )
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 26.0),
+          ),
           Container(
-            margin: EdgeInsets.fromLTRB(48, 44, 48, 42),
+            alignment: Alignment.center,
             child: Text(
               'Bem vindo ao Meau!\nAqui você pode adotar, doar e ajudar\n'
                   'cães e gatos com facilidade.\nQual o seu interesse?',
@@ -78,6 +84,9 @@ class Intro extends StatelessWidget {
               ),
             )
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 24.0),
+          ),
           Column(
             children: <Widget> [
               FlatButton(
@@ -88,11 +97,17 @@ class Intro extends StatelessWidget {
                   Navigator.pushNamed(context, 'ADOTARPAGE1');
                 }, 
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 2.0),
+              ),
               FlatButton(
                 child: IntroButton(
                 name: TextButIntro ('AJUDAR'),
                 ),
                 onPressed: null,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 2.0),
               ),
               FlatButton(
                 child: IntroButton(
@@ -102,8 +117,11 @@ class Intro extends StatelessWidget {
               ),
             ]
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 22.0),
+          ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 38),
+            alignment: Alignment.center,
             child: Text(
               'login',
               textAlign: TextAlign.center,
@@ -115,10 +133,12 @@ class Intro extends StatelessWidget {
               ),
             )
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+          ),
           Container(
             width: 122,
             height: 44,
-            //margin: EdgeInsets.fromLTRB(0, 30, 0, 32),
             alignment: Alignment.center,
             child: Image.asset(
               'assets/Meau_marca_2.png',
@@ -139,11 +159,9 @@ class IntroButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector (
-      child: Container(
+    return Container(
         height: 40.0,
         width: 232.0,
-        margin: const EdgeInsets.symmetric(vertical: 6.0),
         decoration: BoxDecoration(
           boxShadow: [BoxShadow(
             color: Colors.black38,
@@ -161,7 +179,6 @@ class IntroButton extends StatelessWidget {
         child: Center(
           child: name,
         ),
-      ),
     );
   }
 }
