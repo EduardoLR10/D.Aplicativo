@@ -9,10 +9,30 @@ void main() {
   runApp(MaterialApp(
     title: 'MEAU',
     routes: {
+      'INTRODUCAO' : (BuildContext context) => new MainPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
     },
-    home: MainPage(),
+    home: StartPage(),
   ));
+}
+
+class StartPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    new Future.delayed(const Duration(seconds: 1), () {
+      Navigator.pushNamed(context, 'INTRODUCAO');
+    });
+    return new Scaffold(
+      body: new Container(
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage("assets/start_meau.png"),
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class MainPage extends StatefulWidget {
