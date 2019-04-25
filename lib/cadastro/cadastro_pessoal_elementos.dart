@@ -132,3 +132,83 @@ class ContBar extends StatelessWidget {
     );
   }
 }
+
+class CadPTextField extends StatefulWidget {
+  CadPTextField ({this.text : 'ENTER', this.obscure : false});
+  final String text;
+  final bool obscure;
+
+  @override
+  CadPTextFieldState createState(){
+    return new CadPTextFieldState(obscure, text: text);
+  }
+}
+
+class CadPTextFieldState extends State<CadPTextField> {
+  CadPTextFieldState (this.obscure, {this.text : 'ENTER'});
+  final String text;
+  final bool obscure;
+  var password = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: 312),
+      child:
+        TextFormField(
+          validator: (value){},
+          obscureText: password,
+          style: TextStyle(
+              fontFamily: 'Robotto',
+              color: Color(0xff575756),
+              fontSize: 14.0),
+          decoration: InputDecoration(
+            hintText: text,
+            hintStyle: TextStyle(
+              fontFamily: 'Robotto',
+              color: Color(0xffbdbdbd),
+              fontSize: 14.0,
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(width: 0.8, color: Color(0xffe6e7e8))
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(width: 2, color: Color(0xff88c9bf)),
+            ),
+            hasFloatingPlaceholder: false,
+            contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+            suffix: CheckField(),
+          ),
+        ),
+    );
+  }
+}
+
+class CheckField extends StatefulWidget {
+
+  @override
+  CheckFieldState createState(){
+    return new CheckFieldState();
+  }
+}
+
+class CheckFieldState extends State<CheckField> {
+
+  @override
+  Widget build(BuildContext context) {
+    if (usernameFormat())
+      return Icon(Icons.check, color: Color(0xff589b9b));
+    else
+      return Padding (
+        padding: EdgeInsets.all(0),
+      );
+  }
+}
+
+bool usernameFormat ()
+{
+  if (false)
+    return false;
+  else
+    return true;
+}

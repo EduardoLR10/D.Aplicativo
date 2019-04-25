@@ -12,7 +12,7 @@ void main() {
     routes: {
       'INTRODUCAO' : (BuildContext context) => new MainPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
-      'LOGINPAGE1' : (BuildContext context) => new LoginPage(),
+      'LOGINPAGE' : (BuildContext context) => new LoginPage(),
     },
     home: StartPage(),
   ));
@@ -58,6 +58,7 @@ class Intro extends StatelessWidget {
 
     return Scaffold( // Widget do MaterialApp
       //appBar: IntroAppBar(),
+      resizeToAvoidBottomPadding: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
@@ -145,7 +146,7 @@ class Intro extends StatelessWidget {
           GestureDetector(
             onTap: () {
               SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values); //Faz status bar voltar
-              Navigator.pushNamed(context, 'LOGINPAGE1').then((statusbar){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
+              Navigator.pushNamed(context, 'LOGINPAGE').then((statusbar){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
             },
             child: Text(
               'login',

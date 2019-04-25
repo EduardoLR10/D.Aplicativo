@@ -68,6 +68,10 @@ flutter:
     - family: Courgette
       fonts:
         - asset: fonts/Courgette-Regular.ttf
+
+    - family: Custom
+      fonts:
+        - asset: fonts/IconsFont.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
