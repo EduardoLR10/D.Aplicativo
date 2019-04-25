@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import './adotar.dart';
 //import './adotar2.dart';
+import 'cadastro/login.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -11,6 +12,7 @@ void main() {
     routes: {
       'INTRODUCAO' : (BuildContext context) => new MainPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
+      'LOGINPAGE1' : (BuildContext context) => new LoginPage(),
     },
     home: StartPage(),
   ));
@@ -20,6 +22,7 @@ class StartPage extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     new Future.delayed(const Duration(seconds: 1), () {
+      SystemChrome.setEnabledSystemUIOverlays([]); //Faz status bar sumir
       Navigator.pushNamed(context, 'INTRODUCAO');
     });
     return new Scaffold(
@@ -52,8 +55,6 @@ class MainState extends State<MainPage> {
 class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context)  {
-
-  SystemChrome.setEnabledSystemUIOverlays([]);
 
     return Scaffold( // Widget do MaterialApp
       //appBar: IntroAppBar(),
@@ -114,7 +115,8 @@ class Intro extends StatelessWidget {
                 name: TextButIntro ('ADOTAR'),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, 'ADOTARPAGE1');
+                  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values); //Faz status bar voltar
+                  Navigator.pushNamed(context, 'ADOTARPAGE1').then((statusbar){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
                 }, 
               ),
               Padding(
@@ -140,8 +142,11 @@ class Intro extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 22.0),
           ),
-          Container(
-            alignment: Alignment.center,
+          GestureDetector(
+            onTap: () {
+              SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values); //Faz status bar voltar
+              Navigator.pushNamed(context, 'LOGINPAGE1').then((statusbar){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
+            },
             child: Text(
               'login',
               textAlign: TextAlign.center,
