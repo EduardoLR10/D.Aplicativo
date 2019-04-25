@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import './adotar.dart';
 //import './adotar2.dart';
 import 'cadastro/login.dart';
+import 'cadastro/cad_log.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -13,6 +14,7 @@ void main() {
       'INTRODUCAO' : (BuildContext context) => new MainPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
       'LOGINPAGE' : (BuildContext context) => new LoginPage(),
+      'CADLOGPAGE' : (BuildContext context) => new CadLogPage(),
     },
     home: StartPage(),
   ));
@@ -136,7 +138,10 @@ class Intro extends StatelessWidget {
                 child: IntroButton(
                 name: TextButIntro ('CADASTRAR ANIMAL'),
                 ),
-                onPressed: null,
+                onPressed: () {
+                  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+                  Navigator.pushNamed(context, 'CADLOGPAGE').then((context){SystemChrome.setEnabledSystemUIOverlays([]);});//Faz status bar voltar
+                },
               ),
             ]
           ),
