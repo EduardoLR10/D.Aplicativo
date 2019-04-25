@@ -117,7 +117,7 @@ class Intro extends StatelessWidget {
                 ),
                 onPressed: () {
                   SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values); //Faz status bar voltar
-                  Navigator.pushNamed(context, 'ADOTARPAGE1').then((statusbar){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
+                  Navigator.pushNamed(context, 'ADOTARPAGE1').then((context){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
                 }, 
               ),
               Padding(
@@ -146,7 +146,7 @@ class Intro extends StatelessWidget {
           GestureDetector(
             onTap: () {
               SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values); //Faz status bar voltar
-              Navigator.pushNamed(context, 'LOGINPAGE').then((statusbar){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
+              Navigator.pushNamed(context, 'LOGINPAGE').then((context){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
             },
             child: Text(
               'login',

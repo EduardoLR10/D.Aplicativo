@@ -62,7 +62,7 @@ class LoginFormState extends State<LoginForm> {
           ),
           FlatButton(
             child: FaceGoogleCont(
-              text: TextFaceGoogle(" ENTRAR COM FACEBOOK"),
+              text: TextFaceGoogle("  ENTRAR COM FACEBOOK"),
               color: 0xff194f7c,
               icon: FaceIcon(),
             ),
@@ -70,7 +70,7 @@ class LoginFormState extends State<LoginForm> {
           ),
           FlatButton(
             child: FaceGoogleCont(
-                text: TextFaceGoogle(" ENTRAR COM GOOGLE"),
+                text: TextFaceGoogle("  ENTRAR COM GOOGLE"),
                 color: 0xfff15f5c,
                 icon: GoogleIcon(),
             ),
@@ -141,13 +141,13 @@ class FaceGoogleCont extends StatelessWidget {
 class FaceIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Icon(CustomIcons.facebook, color: Color(0xfff7f7f7));
+    return Icon(CustomIcons.facebook, color: Color(0xfff7f7f7), size: 13,);
   }
 }
 
 class GoogleIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Icon(CustomIcons.gplus, color: Color(0xfff7f7f7));
+    return Icon(CustomIcons.gplus, color: Color(0xfff7f7f7), size: 13,);
   }
 }
