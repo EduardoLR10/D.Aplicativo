@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'cadastro_pessoal_elementos.dart';
+import 'cadastrop.dart';
 import 'login.dart';
 
 class CadLogPage extends StatelessWidget {
@@ -47,7 +48,9 @@ class CadLogPage extends StatelessWidget {
           ),
           FlatButton(
             child: CadPButtonCont(text: TextButCad("FAZER CADASTRO")),
-            onPressed:() {Navigator.pop(context);},
+            onPressed:() {Navigator.push(context,
+                new MaterialPageRoute(
+                builder: (context) => new CadastroPage()));},
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 22.0),

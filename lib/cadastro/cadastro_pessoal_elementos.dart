@@ -153,7 +153,7 @@ class CadPTextFieldState extends State<CadPTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 312),
+      constraints: BoxConstraints(maxWidth: 312, maxHeight: 30),
       child:
         TextFormField(
           validator: (value){},
@@ -176,7 +176,7 @@ class CadPTextFieldState extends State<CadPTextField> {
               borderSide: BorderSide(width: 2, color: Color(0xff88c9bf)),
             ),
             hasFloatingPlaceholder: false,
-            contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+            contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 8),
             suffix: CheckField(),
           ),
         ),
