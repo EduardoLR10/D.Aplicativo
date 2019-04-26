@@ -3,6 +3,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 
 import './adotar.dart';
+import './ajudar.dart';
 //import './adotar2.dart';
 
 void main() {
@@ -11,6 +12,7 @@ void main() {
     routes: {
       'INTRODUCAO' : (BuildContext context) => new MainPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
+      'AJUDAR': (BuildContext context) => new Ajudar(),
     },
     home: StartPage(),
   ));
@@ -124,7 +126,9 @@ class Intro extends StatelessWidget {
                 child: IntroButton(
                 name: TextButIntro ('AJUDAR'),
                 ),
-                onPressed: null,
+                onPressed: () {
+                  Navigator.pushNamed(context, 'AJUDAR');
+                },
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 2.0),
