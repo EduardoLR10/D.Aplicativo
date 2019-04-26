@@ -33,6 +33,7 @@ class AdotarState2 extends StatelessWidget {
         foregroundColor: Color(0xff434343),
         //shape: new CircleBorder(Border),
         child: new Icon(Icons.favorite_border),
+        onPressed: null,
       ),
       body: new ListView.builder(
         itemCount: 1,

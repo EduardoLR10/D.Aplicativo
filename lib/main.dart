@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import './adotar.dart';
 import './ajudar.dart';
 //import './adotar2.dart';
+import 'cadastro/login.dart';
+import 'cadastro/cad_log.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -12,7 +14,12 @@ void main() {
     routes: {
       'INTRODUCAO' : (BuildContext context) => new MainPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
+<<<<<<< HEAD
       'AJUDAR': (BuildContext context) => new Ajudar(),
+=======
+      'LOGINPAGE' : (BuildContext context) => new LoginPage(),
+      'CADLOGPAGE' : (BuildContext context) => new CadLogPage(),
+>>>>>>> f8d9f02f850935485f5f5538948574b6490dd3a6
     },
     home: StartPage(),
   ));
@@ -22,6 +29,7 @@ class StartPage extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     new Future.delayed(const Duration(seconds: 1), () {
+      SystemChrome.setEnabledSystemUIOverlays([]); //Faz status bar sumir
       Navigator.pushNamed(context, 'INTRODUCAO');
     });
     return new Scaffold(
@@ -55,10 +63,9 @@ class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context)  {
 
-  SystemChrome.setEnabledSystemUIOverlays([]);
-
     return Scaffold( // Widget do MaterialApp
       //appBar: IntroAppBar(),
+      resizeToAvoidBottomPadding: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
@@ -116,7 +123,8 @@ class Intro extends StatelessWidget {
                 name: TextButIntro ('ADOTAR'),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, 'ADOTARPAGE1');
+                  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values); //Faz status bar voltar
+                  Navigator.pushNamed(context, 'ADOTARPAGE1').then((context){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
                 }, 
               ),
               Padding(
@@ -137,15 +145,21 @@ class Intro extends StatelessWidget {
                 child: IntroButton(
                 name: TextButIntro ('CADASTRAR ANIMAL'),
                 ),
-                onPressed: null,
+                onPressed: () {
+                  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+                  Navigator.pushNamed(context, 'CADLOGPAGE').then((context){SystemChrome.setEnabledSystemUIOverlays([]);});//Faz status bar voltar
+                },
               ),
             ]
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 22.0),
           ),
-          Container(
-            alignment: Alignment.center,
+          GestureDetector(
+            onTap: () {
+              SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values); //Faz status bar voltar
+              Navigator.pushNamed(context, 'LOGINPAGE').then((context){SystemChrome.setEnabledSystemUIOverlays([]);}); //Faz status bar desaparecer
+            },
             child: Text(
               'login',
               textAlign: TextAlign.center,

@@ -60,13 +60,19 @@ flutter:
   # example:
 
   fonts:
-                   - family: Roboto
-                     fonts:
-                       - asset: fonts/Roboto-Regular.ttf
+      
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Medium.ttf
 
-                   - family: Courgette
-                     fonts:
-                       - asset: fonts/Courgette-Regular.ttf
+    - family: Courgette
+      fonts:
+        - asset: fonts/Courgette-Regular.ttf
+
+    - family: Custom
+      fonts:
+        - asset: fonts/IconsFont.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
