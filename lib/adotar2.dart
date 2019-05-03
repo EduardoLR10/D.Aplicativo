@@ -422,6 +422,9 @@ class AdotarState2 extends StatelessWidget {
                       print('Cliquei');
                     },
                     child: new GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, 'LOGINPAGE');
+                      },
                       child: Container(
                         height: 40.0,
                         width: 232.0,
