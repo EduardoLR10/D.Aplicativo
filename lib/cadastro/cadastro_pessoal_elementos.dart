@@ -87,9 +87,10 @@ class IconMenuCadP extends StatelessWidget {
 }
 
 class ContBar extends StatelessWidget {
-  ContBar({this.text});
+  ContBar({this.text, @required this.scaffoldKey});
 
   final String text;
+  var scaffoldKey;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -122,7 +123,7 @@ class ContBar extends StatelessWidget {
               child: IconButton (
                 icon: IconMenuCadP(),
                 tooltip:  'Menu',
-                onPressed: null,
+                onPressed: (){scaffoldKey.currentState.openDrawer();},
               ),
             ),
             TextAppBarCad(text),
@@ -134,21 +135,20 @@ class ContBar extends StatelessWidget {
 }
 
 class CadPTextField extends StatefulWidget {
-  CadPTextField ({this.text : 'ENTER', this.obscure : false});
+  CadPTextField ({this.text : 'ENTER',@required this.obscure});
   final String text;
   final bool obscure;
 
   @override
   CadPTextFieldState createState(){
-    return new CadPTextFieldState(obscure, text: text);
+    return new CadPTextFieldState(obscure: obscure, text: text);
   }
 }
 
 class CadPTextFieldState extends State<CadPTextField> {
-  CadPTextFieldState (this.obscure, {this.text : 'ENTER'});
+  CadPTextFieldState ({@required this.obscure, this.text : 'ENTER'});
   final String text;
   final bool obscure;
-  var password = false;
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +157,7 @@ class CadPTextFieldState extends State<CadPTextField> {
       child:
         TextFormField(
           validator: (value){},
-          obscureText: password,
+          obscureText: obscure,
           style: TextStyle(
               fontFamily: 'Robotto',
               color: Color(0xff575756),

@@ -7,19 +7,17 @@ import './ajudar.dart';
 //import './adotar2.dart';
 import 'cadastro/login.dart';
 import 'cadastro/cad_log.dart';
+import 'common.dart';
 
 void main() {
   runApp(MaterialApp(
     title: 'MEAU',
     routes: {
-      'INTRODUCAO' : (BuildContext context) => new MainPage(),
+      'INTRODUCAO' : (BuildContext context) => new IntroPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
-<<<<<<< HEAD
       'AJUDAR': (BuildContext context) => new Ajudar(),
-=======
       'LOGINPAGE' : (BuildContext context) => new LoginPage(),
       'CADLOGPAGE' : (BuildContext context) => new CadLogPage(),
->>>>>>> f8d9f02f850935485f5f5538948574b6490dd3a6
     },
     home: StartPage(),
   ));
@@ -33,39 +31,40 @@ class StartPage extends StatelessWidget{
       Navigator.pushNamed(context, 'INTRODUCAO');
     });
     return new Scaffold(
-      body: new Container(
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-            image: new AssetImage("assets/start_meau.png"),
-            fit: BoxFit.fill,
+      body: GestureDetector(
+        onTap: (){Navigator.pushNamed(context, 'INTRODUCAO');},
+        child:
+          new Container(
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage("assets/start_meau.png"),
+                fit: BoxFit.fill,
+              ),
+            ),
           ),
-        ),
       ),
     );
   }
 }
 
-class MainPage extends StatefulWidget {
+class IntroPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new MainState();
+    return new IntroState();
   }
 }
 
-class MainState extends State<MainPage> {
-  @override
-  Widget build (BuildContext context) {
-    return Intro();
-  }
-}
+class IntroState extends State<IntroPage> {
+  var scaffoldKey = GlobalKey<ScaffoldState>();
 
-class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context)  {
 
     return Scaffold( // Widget do MaterialApp
       //appBar: IntroAppBar(),
+      key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
+      drawer: MyDrawer(name: 'Giordano Monteiro', image: 'assets/cat1.png',),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
@@ -77,7 +76,7 @@ class Intro extends StatelessWidget {
               IconButton (
                 icon: IconIntro(),
                 tooltip:  'Menu',
-                onPressed: null,
+                onPressed: (){scaffoldKey.currentState.openDrawer();},
               ),
           ),
           Padding(

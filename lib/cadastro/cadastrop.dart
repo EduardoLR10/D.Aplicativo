@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'cadastro_pessoal_elementos.dart';
+import '../common.dart';
 
 class CadastroPage extends StatelessWidget {
+  var scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Color(0xff88c9bf),
     ));
     return Scaffold(
+      key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfffafafa),
+      drawer: MyDrawer(name: 'Giordano Monteiro', image: 'assets/cat1.png',),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          ContBar(text: 'Cadastro Pessoal'),
+          ContBar(text: 'Cadastro Pessoal', scaffoldKey: scaffoldKey,),
           CadPForm(),
         ],
       ),
@@ -56,31 +60,31 @@ class CadPFormState extends State<CadPForm> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              CadPTextField(text: 'Nome completo'),
+              CadPTextField(text: 'Nome completo', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
-              CadPTextField(text: 'Idade'),
+              CadPTextField(text: 'Idade', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
-                CadPTextField(text: 'E-mail'),
+                CadPTextField(text: 'E-mail', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
-              CadPTextField(text: 'Estado'),
+              CadPTextField(text: 'Estado', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
-              CadPTextField(text: 'Cidade'),
+              CadPTextField(text: 'Cidade', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
-              CadPTextField(text: 'Endereço'),
+              CadPTextField(text: 'Endereço', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
-              CadPTextField(text: 'Telefone'),
+              CadPTextField(text: 'Telefone', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 14),
               ),
@@ -88,7 +92,7 @@ class CadPFormState extends State<CadPForm> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              CadPTextField(text: 'Nome de Usuário'),
+              CadPTextField(text: 'Nome de Usuário', obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
