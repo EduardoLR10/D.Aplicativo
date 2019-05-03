@@ -91,6 +91,7 @@ class ContBar extends StatelessWidget {
 
   final String text;
   var scaffoldKey;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

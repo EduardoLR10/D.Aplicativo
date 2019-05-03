@@ -3,6 +3,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'cadastro_pessoal_elementos.dart';
 import '../common.dart';
+import '../use_camera.dart';
 
 class CadastroPage extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -139,7 +140,9 @@ class ImageBoxState extends State<ImageBox>{
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: null,
+        onTap: () {Navigator.push(context,
+            new MaterialPageRoute(
+                builder: (context) => new TakePicture(camera: cameras[0])));},
         child: Container(
             padding: EdgeInsets.all(0),
             alignment: Alignment.center,

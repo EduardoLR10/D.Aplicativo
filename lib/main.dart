@@ -8,8 +8,10 @@ import './ajudar.dart';
 import 'cadastro/login.dart';
 import 'cadastro/cad_log.dart';
 import 'common.dart';
+import 'use_camera.dart';
 
 void main() {
+  avaCam();
   runApp(MaterialApp(
     title: 'MEAU',
     routes: {

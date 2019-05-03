@@ -7,6 +7,7 @@ import '../common.dart';
 
 class LoginPage extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
