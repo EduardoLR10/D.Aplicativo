@@ -88,9 +88,11 @@ class IconMenuCadP extends StatelessWidget {
 }
 
 class ContBar extends StatelessWidget {
-  ContBar({this.text});
+  ContBar({this.text, @required this.scaffoldKey});
 
   final String text;
+  var scaffoldKey;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -122,8 +124,8 @@ class ContBar extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
               child: IconButton(
                 icon: IconMenuCadP(),
-                tooltip: 'Menu',
-                onPressed: null,
+                tooltip:  'Menu',
+                onPressed: (){scaffoldKey.currentState.openDrawer();},
               ),
             ),
             TextAppBarCad(text),
@@ -143,8 +145,8 @@ class CadPTextField extends StatefulWidget {
   final Function(String) callback;
 
   @override
-  CadPTextFieldState createState() {
-    return new CadPTextFieldState(obscure, text: text);
+  CadPTextFieldState createState(){
+    return new CadPTextFieldState(obscure: obscure, text: text);
   }
 }
 
@@ -153,7 +155,6 @@ class CadPTextFieldState extends State<CadPTextField> {
   final TextEditingController _fieldcontroller = TextEditingController();
   final String text;
   final bool obscure;
-  var password = false;
 
   @override
   Widget build(BuildContext context) {

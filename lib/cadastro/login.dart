@@ -3,21 +3,26 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'cadastro_pessoal_elementos.dart';
 import '../icons/custom_icons.dart';
+import '../common.dart';
 
 class LoginPage extends StatelessWidget {
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
         statusBarColor: Color(0xff88c9bf),
     ));
     return Scaffold(
+      key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfffafafa),
+      drawer: MyDrawer(name: 'Giordano Monteiro', image: 'assets/cat1.png',),
       body: Column (
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          ContBar(text: 'Login'),
+          ContBar(text: 'Login', scaffoldKey: scaffoldKey,),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 32.0),
           ),
@@ -45,7 +50,7 @@ class LoginFormState extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
-          CadPTextField(text: 'Nome de usuário'),
+          CadPTextField(text: 'Nome de usuário', obscure: false,),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
           ),
@@ -54,7 +59,7 @@ class LoginFormState extends State<LoginForm> {
             padding: EdgeInsets.symmetric(vertical: 26),
           ),
           FlatButton(
-              child: CadPButtonCont(text: TextButCad("ENTRAR")),
+              child: CadPButtonCont(text: TextButCad("ENTRAR"),),
               onPressed:() {Navigator.pop(context);},
           ),
           Padding(
