@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import './adotar.dart';
 import './ajudar.dart';
@@ -14,12 +15,8 @@ void main() {
     routes: {
       'INTRODUCAO' : (BuildContext context) => new MainPage(),
       'ADOTARPAGE1': (BuildContext context) => new AdotarPage(),
-<<<<<<< HEAD
-      'AJUDAR': (BuildContext context) => new Ajudar(),
-=======
       'LOGINPAGE' : (BuildContext context) => new LoginPage(),
       'CADLOGPAGE' : (BuildContext context) => new CadLogPage(),
->>>>>>> f8d9f02f850935485f5f5538948574b6490dd3a6
     },
     home: StartPage(),
   ));

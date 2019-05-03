@@ -8,19 +8,20 @@ class CadPButtonCont extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container (
+    return Container(
       height: 40.0,
       width: 232.0,
       decoration: BoxDecoration(
-        boxShadow: [BoxShadow(
-          color: Colors.black38,
-          blurRadius: 1.0,
-          spreadRadius: 1.0,
-          offset: Offset(
-            0.0,
-            1.0,
-          ),
-        )
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+            offset: Offset(
+              0.0,
+              1.0,
+            ),
+          )
         ],
         borderRadius: BorderRadius.circular(2.0),
         color: Color(0xff88c9bf),
@@ -39,7 +40,7 @@ class TextButCad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text (
+    return Text(
       string,
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
@@ -59,7 +60,7 @@ class TextAppBarCad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text (
+    return Text(
       string,
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
@@ -98,30 +99,30 @@ class ContBar extends StatelessWidget {
         alignment: Alignment.centerLeft,
         constraints: BoxConstraints(),
         height: 56,
-        decoration:
-        BoxDecoration(
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.0),
           color: Color(0xffcfe9e5),
-          boxShadow: [BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4.0,
-            spreadRadius: 1.0,
-            offset: Offset(
-              0.0,
-              1.0,
-            ),
-          )],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4.0,
+              spreadRadius: 1.0,
+              offset: Offset(
+                0.0,
+                1.0,
+              ),
+            )
+          ],
         ),
-        child:
-        Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           textDirection: TextDirection.ltr,
           children: <Widget>[
-            Padding (
+            Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
-              child: IconButton (
+              child: IconButton(
                 icon: IconMenuCadP(),
-                tooltip:  'Menu',
+                tooltip: 'Menu',
                 onPressed: null,
               ),
             ),
@@ -134,18 +135,22 @@ class ContBar extends StatelessWidget {
 }
 
 class CadPTextField extends StatefulWidget {
-  CadPTextField ({this.text : 'ENTER', this.obscure : false});
+  CadPTextField({this.text: 'ENTER', this.obscure: false, this.strings, this.callback});
   final String text;
   final bool obscure;
 
+  final String strings;
+  final Function(String) callback;
+
   @override
-  CadPTextFieldState createState(){
+  CadPTextFieldState createState() {
     return new CadPTextFieldState(obscure, text: text);
   }
 }
 
 class CadPTextFieldState extends State<CadPTextField> {
-  CadPTextFieldState (this.obscure, {this.text : 'ENTER'});
+  CadPTextFieldState(this.obscure, {this.text: 'ENTER'});
+  final TextEditingController _fieldcontroller = TextEditingController();
   final String text;
   final bool obscure;
   var password = false;
@@ -154,59 +159,58 @@ class CadPTextFieldState extends State<CadPTextField> {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(maxWidth: 312, maxHeight: 30),
-      child:
-        TextFormField(
-          validator: (value){},
-          obscureText: password,
-          style: TextStyle(
-              fontFamily: 'Robotto',
-              color: Color(0xff575756),
-              fontSize: 14.0),
-          decoration: InputDecoration(
-            hintText: text,
-            hintStyle: TextStyle(
-              fontFamily: 'Robotto',
-              color: Color(0xffbdbdbd),
-              fontSize: 14.0,
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(width: 0.8, color: Color(0xffe6e7e8))
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(width: 2, color: Color(0xff88c9bf)),
-            ),
-            hasFloatingPlaceholder: false,
-            contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 8),
-            suffix: CheckField(),
+      child: TextFormField(
+        controller: _fieldcontroller,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Please enter some text';
+          }
+        },
+        onEditingComplete: widget.callback(_fieldcontroller.text),
+        obscureText: password,
+        style: TextStyle(
+            fontFamily: 'Robotto', color: Color(0xff575756), fontSize: 14.0),
+        decoration: InputDecoration(
+          hintText: text,
+          hintStyle: TextStyle(
+            fontFamily: 'Robotto',
+            color: Color(0xffbdbdbd),
+            fontSize: 14.0,
           ),
+          enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(width: 0.8, color: Color(0xffe6e7e8))),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(width: 2, color: Color(0xff88c9bf)),
+          ),
+          hasFloatingPlaceholder: false,
+          contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 8),
+          suffix: CheckField(),
         ),
+      ),
     );
   }
 }
 
 class CheckField extends StatefulWidget {
-
   @override
-  CheckFieldState createState(){
+  CheckFieldState createState() {
     return new CheckFieldState();
   }
 }
 
 class CheckFieldState extends State<CheckField> {
-
   @override
   Widget build(BuildContext context) {
     if (usernameFormat())
       return Icon(Icons.check, color: Color(0xff589b9b));
     else
-      return Padding (
+      return Padding(
         padding: EdgeInsets.all(0),
       );
   }
 }
 
-bool usernameFormat ()
-{
+bool usernameFormat() {
   if (false)
     return false;
   else

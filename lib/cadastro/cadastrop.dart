@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'cadastro_pessoal_elementos.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 
 class CadastroPage extends StatelessWidget {
   @override
@@ -25,6 +27,7 @@ class CadastroPage extends StatelessWidget {
 }
 
 class CadPForm extends StatefulWidget {
+  
   @override
   CadPFormState createState(){
     return CadPFormState();
@@ -33,6 +36,25 @@ class CadPForm extends StatefulWidget {
 
 class CadPFormState extends State<CadPForm> {
   final _formKey = GlobalKey<FormState>();
+  String cidade;
+  String confsenha;
+  String email;
+  String endereco;
+  String estado;
+  String idade;
+  String nomecompleto;
+  String nomeuser;
+  String senha;
+  String telefone;
+  
+  String strings;
+
+  callback(newString) {
+    setState(() {
+      strings = newString;
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -56,7 +78,8 @@ class CadPFormState extends State<CadPForm> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              CadPTextField(text: 'Nome completo'),
+              CadPTextField(text: 'Nome completo', strings: strings, callback: callback),
+              nomecompleto = strings,
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
@@ -111,7 +134,7 @@ class CadPFormState extends State<CadPForm> {
               FlatButton(
                 child: CadPButtonCont(text: TextButCad("FAZER CADASTRO")),
                 onPressed: () {
-                  Navigator.pop(context);
+                  //createRecord();
                 },
               ),
               Padding(
