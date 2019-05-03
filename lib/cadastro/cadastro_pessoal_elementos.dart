@@ -146,15 +146,17 @@ class CadPTextField extends StatefulWidget {
 
   @override
   CadPTextFieldState createState(){
-    return new CadPTextFieldState(obscure: obscure, text: text);
+    return new CadPTextFieldState(obscure: obscure, text: text, callback: callback);
   }
 }
 
 class CadPTextFieldState extends State<CadPTextField> {
-  CadPTextFieldState(this.obscure, {this.text: 'ENTER'});
-  final TextEditingController _fieldcontroller = TextEditingController();
+  CadPTextFieldState({@required this.obscure, @required this.text, @required this.callback});
+
+  TextEditingController _fieldcontroller = TextEditingController();
   final String text;
   final bool obscure;
+  final Function(String) callback;
 
   @override
   Widget build(BuildContext context) {
@@ -167,8 +169,8 @@ class CadPTextFieldState extends State<CadPTextField> {
             return 'Please enter some text';
           }
         },
-        onEditingComplete: widget.callback(_fieldcontroller.text),
-        obscureText: password,
+        //onEditingComplete: widget.callback(_fieldcontroller.text),
+        obscureText: obscure,
         style: TextStyle(
             fontFamily: 'Robotto', color: Color(0xff575756), fontSize: 14.0),
         decoration: InputDecoration(

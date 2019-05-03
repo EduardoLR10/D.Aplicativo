@@ -62,6 +62,7 @@ class CadPFormState extends State<CadPForm> {
   
   @override
   Widget build(BuildContext context) {
+    nomecompleto = strings;
     return Form(
       key: _formKey,
       child:  Expanded (child: ListView.builder(
@@ -83,8 +84,7 @@ class CadPFormState extends State<CadPForm> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              CadPTextField(text: 'Nome completo', strings: strings, callback: callback),
-              nomecompleto = strings,
+              CadPTextField(text: 'Nome completo', strings: strings, callback: callback, obscure: false,),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 18),
               ),
@@ -139,7 +139,7 @@ class CadPFormState extends State<CadPForm> {
               FlatButton(
                 child: CadPButtonCont(text: TextButCad("FAZER CADASTRO")),
                 onPressed: () {
-                  //createRecord();
+                  Navigator.pop(context);
                 },
               ),
               Padding(
