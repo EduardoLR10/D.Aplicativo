@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class CadPButtonCont extends StatelessWidget {
   CadPButtonCont({this.text});
@@ -129,10 +132,31 @@ class ContBar extends StatelessWidget {
               ),
             ),
             TextAppBarCad(text),
+            FlatButton(
+              child: const Text('Sign out'),
+              textColor: Colors.black,
+              onPressed: () async {
+                final FirebaseUser user = await _auth.currentUser();
+                if (user == null) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: const Text('No one has signed in.'),
+                  ));
+                  return;
+                }
+                _signOut();
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text('Successfully signed out.'),
+                ));
+              },
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _signOut() async {
+    await _auth.signOut();
   }
 }
 
