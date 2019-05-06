@@ -6,6 +6,8 @@ import '../icons/custom_icons.dart';
 import '../common.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -55,30 +57,20 @@ class LoginFormState extends State<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
-          CadPTextField(text: 'Nome de usuário', obscure: false,),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-          ),
-          CadPTextField(text: 'Senha', obscure: true),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 26),
-          ),
-          FlatButton(
-              child: CadPButtonCont(text: TextButCad("ENTRAR"),),
-              onPressed:() {Navigator.pop(context);},
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 36),
-          ),
-          FlatButton(
-            child: FaceGoogleCont(
-              text: TextFaceGoogle("  ENTRAR COM FACEBOOK"),
-              color: 0xff194f7c,
-              icon: FaceIcon(),
-            ),
-            onPressed:() {Navigator.pop(context);},
-          ),
-          _GoogleSignInSection(),  
+          _GoogleSignInSection(),
+          StreamBuilder(
+            stream: Firestore.instance.collection('users').where('estado', isEqualTo: "DF").snapshots().map((snap) => snap.documents.map((snap) => snap.data)),
+            builder: (context, snapshot) {
+              switch(snapshot.connectionState){
+                case ConnectionState.waiting:
+                  return new Text("carregando");
+                  break;
+                default:
+                  return new Text(snapshot.data.toString());
+                  break;
+              }
+            }
+          ), 
         ],
       ),
     );
@@ -162,25 +154,19 @@ class _GoogleSignInSection extends StatefulWidget {
 
 class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
   bool _success;
-  String _userID;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Container(
-          child: const Text('Test sign in with Google'),
-          padding: const EdgeInsets.all(16),
-          alignment: Alignment.center,
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          alignment: Alignment.center,
-          child: RaisedButton(
+        FlatButton(
+            child: FaceGoogleCont(
+                text: TextFaceGoogle("  SIGN IN WITH GOOGLE"),
+                color: 0xfff15f5c,
+                icon: GoogleIcon(),
+            ),
             onPressed: () async {
               _signInWithGoogle();
             },
-            child: const Text('Sign in with Google'),
-          ),
         ),
         Container(
           alignment: Alignment.center,
@@ -189,7 +175,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
             _success == null
                 ? ''
                 : (_success
-                    ? 'Successfully signed in, uid: ' + _userID
+                    ? 'Successfully signed in'
                     : 'Sign in failed'),
             style: TextStyle(color: Colors.red),
           ),
@@ -214,11 +200,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(await user.getIdToken() != null);
 
     final FirebaseUser currentUser = await _auth.currentUser();
+    
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
         _success = true;
-        _userID = user.uid;
       } else {
         _success = false;
       }
