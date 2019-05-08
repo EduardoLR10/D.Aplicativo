@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import '../assets/images.dart';
 import './adotar2.dart';
+import '../entitys/animal.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdotarPage extends StatefulWidget {
   @override
@@ -16,30 +19,61 @@ class AdotarState extends State<AdotarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xfffafafa),
-        appBar: AppBar(
-          title: new Text("Adotar"),
-          backgroundColor: Color(0xFFffd358),
-        ),
-        body: new ListView.builder(
-          itemCount: 1,
-          itemBuilder: (context, index) {
-            return new Column(
-              children: <Widget>[
-                new AnimalCard("Bob", "dog1.png", "FÊMEA", "ADULTO", "MÉDIO",
-                    "GUARÁ NORTE - DISTRITO FEDERAL", 0.0),
-                new AnimalCard("Julie", "cat1.png", "FÊMEA", "JOVEM", "PEQUENA",
-                    "ASA NORTE - DISTRITO FEDERAL", 0.0),
-                new AnimalCard("José", "dog2.png", "MACHO", "JOVEM", "PEQUENO",
-                    "ÁGUAS CLARAS - DISTRITO FEDERAL", 0.0),
-                new AnimalCard("Magnos", "cat2.png", "MACHO", "ADULTO", "MÉDIO",
-                    "SOBRADINHO NORTE - DISTRITO FEDERAL", 0.0),
-                new AnimalCard("Bárbara", "dog3.png", "FÊMEA", "ADULTO",
-                    "MÉDIO", "SAMAMBAIA SUL - DISTRITO FEDERAL", 8.0),
-              ],
-            );
-          },
-        ));
+      backgroundColor: Color(0xfffafafa),
+      appBar: AppBar(
+        title: new Text("Adotar"),
+        backgroundColor: Color(0xFFffd358),
+      ),
+      body: new StreamBuilder(
+          stream: Firestore.instance
+              .collection('animals')
+              .where('available', isEqualTo: true)
+              .snapshots()
+              .map((snap) => snap.documents.map((document) {
+                    var ref = document.data['interessados']
+                        .map((interessado) => interessado.path);
+                    document.data['interessados'] = ref;
+                    return document.data;
+                  })),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                //print("carregando");
+                return Center(child: CircularProgressIndicator());
+                break;
+              default:
+                //print(snapshot.data.toString());
+                //return new Text("teste");
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, position) {
+                      return AnimalCard(
+                          snapshot.data.elementAt(position)['nome'],
+                          snapshot.data.elementAt(position)['url'],
+                          snapshot.data
+                              .elementAt(position)['genero']
+                              .toString()
+                              .toUpperCase(),
+                          snapshot.data
+                              .elementAt(position)['idade']
+                              .toString()
+                              .toUpperCase(),
+                          snapshot.data
+                              .elementAt(position)['porte']
+                              .toString()
+                              .toUpperCase(),
+                          snapshot.data
+                              .elementAt(position)['endereco']
+                              .toString()
+                              .toUpperCase(),
+                          (snapshot.data.elementAt(position) ==
+                                  snapshot.data.last)
+                              ? 8.0
+                              : 0.0);
+                    });
+            }
+          }),
+    );
   }
 }
 
@@ -60,8 +94,8 @@ class AnimalCard extends StatelessWidget {
     return new Column(
       children: <Widget>[
         new Card(
-          margin:
-              new EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0, bottom: bottomcard),
+          margin: new EdgeInsets.only(
+              top: 8.0, left: 8.0, right: 8.0, bottom: bottomcard),
           child: new Container(
             width: 344,
             height: 264,
@@ -101,13 +135,17 @@ class AnimalCard extends StatelessWidget {
               new FlatButton(
                 padding: new EdgeInsets.all(0.0),
                 onPressed: () {
-                  Navigator.push(context, 
-                          new MaterialPageRoute(
-                            builder: (context) => new AdotarState2(
-                              this.animalname, this.animalimagename, 
-                              this.genre, this.size, this.status, this.location),
-                          )
-                        );
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (context) => new Adotar2(
+                            this.animalname,
+                            this.animalimagename,
+                            this.genre,
+                            this.size,
+                            this.status,
+                            this.location),
+                      ));
                 },
                 child: new Column(
                   children: <Widget>[

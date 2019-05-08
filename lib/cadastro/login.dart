@@ -18,18 +18,24 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Color(0xff88c9bf),
+      statusBarColor: Color(0xff88c9bf),
     ));
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfffafafa),
-      drawer: MyDrawer(name: 'Giordano Monteiro', image: 'assets/cat1.png',),
-      body: Column (
+      drawer: MyDrawer(
+        name: 'Giordano Monteiro',
+        image: 'assets/cat1.png',
+      ),
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          ContBar(text: 'Login', scaffoldKey: scaffoldKey,),
+          ContBar(
+            text: 'Login',
+            scaffoldKey: scaffoldKey,
+          ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 32.0),
           ),
@@ -42,7 +48,7 @@ class LoginPage extends StatelessWidget {
 
 class LoginForm extends StatefulWidget {
   @override
-  LoginFormState createState(){
+  LoginFormState createState() {
     return LoginFormState();
   }
 }
@@ -53,25 +59,28 @@ class LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child:  Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget> [
+        children: <Widget>[
           _GoogleSignInSection(),
           StreamBuilder(
-            stream: Firestore.instance.collection('users').where('estado', isEqualTo: "DF").snapshots().map((snap) => snap.documents.map((snap) => snap.data)),
-            builder: (context, snapshot) {
-              switch(snapshot.connectionState){
-                case ConnectionState.waiting:
-                  return new Text("carregando");
-                  break;
-                default:
-                  //print(snapshot.data);
-                  return new Text(snapshot.data.toString());
-                  break;
-              }
-            }
-          ), 
+              stream: Firestore.instance
+                  .collection('users')
+                  .where('estado', isEqualTo: "DF")
+                  .snapshots()
+                  .map((snap) => snap.documents.map((snap) => snap.data)),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return new Text("carregando");
+                    break;
+                  default:
+                    //print(snapshot.data);
+                    return new Text(snapshot.data.toString());
+                    break;
+                }
+              }),
         ],
       ),
     );
@@ -84,7 +93,7 @@ class TextFaceGoogle extends StatelessWidget {
   final String string;
   @override
   Widget build(BuildContext context) {
-    return Text (
+    return Text(
       string,
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
@@ -105,19 +114,20 @@ class FaceGoogleCont extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container (
+    return Container(
       height: 40.0,
       width: 232.0,
       decoration: BoxDecoration(
-        boxShadow: [BoxShadow(
-          color: Colors.black38,
-          blurRadius: 1.0,
-          spreadRadius: 1.0,
-          offset: Offset(
-            0.0,
-            1.0,
-          ),
-        )
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+            offset: Offset(
+              0.0,
+              1.0,
+            ),
+          )
         ],
         borderRadius: BorderRadius.circular(2.0),
         color: Color(color),
@@ -125,7 +135,7 @@ class FaceGoogleCont extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget> [
+        children: <Widget>[
           icon,
           text,
         ],
@@ -137,14 +147,22 @@ class FaceGoogleCont extends StatelessWidget {
 class FaceIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Icon(CustomIcons.facebook, color: Color(0xfff7f7f7), size: 13,);
+    return Icon(
+      CustomIcons.facebook,
+      color: Color(0xfff7f7f7),
+      size: 13,
+    );
   }
 }
 
 class GoogleIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Icon(CustomIcons.gplus, color: Color(0xfff7f7f7), size: 13,);
+    return Icon(
+      CustomIcons.gplus,
+      color: Color(0xfff7f7f7),
+      size: 13,
+    );
   }
 }
 
@@ -160,14 +178,14 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     return Column(
       children: <Widget>[
         FlatButton(
-            child: FaceGoogleCont(
-                text: TextFaceGoogle("  SIGN IN WITH GOOGLE"),
-                color: 0xfff15f5c,
-                icon: GoogleIcon(),
-            ),
-            onPressed: () async {
-              _signInWithGoogle();
-            },
+          child: FaceGoogleCont(
+            text: TextFaceGoogle("  SIGN IN WITH GOOGLE"),
+            color: 0xfff15f5c,
+            icon: GoogleIcon(),
+          ),
+          onPressed: () async {
+            _signInWithGoogle();
+          },
         ),
         Container(
           alignment: Alignment.center,
@@ -175,9 +193,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
           child: Text(
             _success == null
                 ? ''
-                : (_success
-                    ? 'Successfully signed in'
-                    : 'Sign in failed'),
+                : (_success ? 'Successfully signed in' : 'Sign in failed'),
             style: TextStyle(color: Colors.red),
           ),
         )
@@ -201,7 +217,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(await user.getIdToken() != null);
 
     final FirebaseUser currentUser = await _auth.currentUser();
-    
+
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {

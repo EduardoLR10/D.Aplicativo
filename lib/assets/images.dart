@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-
 class CustomImageWidget extends StatelessWidget {
-  final nameofimage;
+  final urlofimage;
   final widthimage;
   final heightimage;
 
-  CustomImageWidget(this.nameofimage, this.widthimage, this.heightimage);
+  CustomImageWidget(this.urlofimage, this.widthimage, this.heightimage);
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +15,11 @@ class CustomImageWidget extends StatelessWidget {
         width: this.widthimage,
         height: this.heightimage,
         alignment: Alignment.topLeft,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           image: new DecorationImage(
-            image: new AssetImage("assets/" + this.nameofimage),
-            fit: BoxFit.cover,
-          ),
+              alignment: Alignment(0, 0),
+              image: new NetworkImage(this.urlofimage),
+              fit: BoxFit.cover),
         ),
       ),
     );

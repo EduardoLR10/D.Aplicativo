@@ -3,16 +3,35 @@ import 'package:flutter/painting.dart';
 import '../assets/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../entitys/animal.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class AdotarState2 extends StatelessWidget {
+class Adotar2 extends StatefulWidget {
   final name;
   final imagename;
   final genre;
   final status;
   final size;
   final location;
+
+  Adotar2(this.name, this.imagename, this.genre, this.size, this.status,
+      this.location);
+  @override
+  State<StatefulWidget> createState() {
+    return new AdotarState2(name, imagename, genre, size, status, location);
+  }
+}
+
+class AdotarState2 extends State<Adotar2> {
+  final name;
+  final imagename;
+  final genre;
+  final status;
+  final size;
+  final location;
+
+  var click = false;
 
   AdotarState2(this.name, this.imagename, this.genre, this.size, this.status,
       this.location);
@@ -424,7 +443,9 @@ class AdotarState2 extends StatelessWidget {
                   onPressed: () async {
                     final FirebaseUser user = await _auth.currentUser();
                     checkanimals();
-                    print('Cliquei');
+                    setState(() {
+                      click = true;
+                    });
                   },
                   child: new Container(
                     height: 40.0,
@@ -457,7 +478,29 @@ class AdotarState2 extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
+              click
+                  ? StreamBuilder(
+                      stream: Firestore.instance
+                          .collection('animals')
+                          .where('nome', isEqualTo: name.toString())
+                          .snapshots()
+                          .map((snap) =>
+                              snap.documents.map((snap) => snap.data)),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            print("carregando");
+                            return Padding(padding: EdgeInsets.all(0));
+                            break;
+                          default:
+                            print(snapshot.data.toString());
+                            //return new Text("teste");
+                            return Padding(padding: EdgeInsets.all(0));
+                            break;
+                        }
+                      })
+                  : Padding(padding: EdgeInsets.all(0)),
             ],
           );
         },
@@ -470,16 +513,16 @@ class AdotarState2 extends StatelessWidget {
     return StreamBuilder(
         stream: Firestore.instance
             .collection('animals')
-            .where('nome', isEqualTo: "Bob")
+            .where('nome', isEqualTo: name.toString())
             .snapshots()
             .map((snap) => snap.documents.map((snap) => snap.data)),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return new Text("carregando");
+              print("carregando");
               break;
             default:
-              print(name);
+              print(snapshot.data.toString());
               return new Text("teste");
               break;
           }
@@ -487,12 +530,12 @@ class AdotarState2 extends StatelessWidget {
   }
 
   void checkanimals() async {
-    print(name);
+    //print(name);
     final FirebaseUser user = await _auth.currentUser();
     Firestore.instance
-            .collection('animals')
-            .document('bob').setData({'dono' : ('users/' + user.uid), 'available' : false}, merge: true);
-    
-            
+        .collection('animals')
+        .document((name.toString()).toLowerCase())
+        .setData({'dono': ('users/' + user.uid), 'available': false},
+            merge: true);
   }
 }
