@@ -3,7 +3,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import './adotar.dart';
+import './adotar/adotar.dart';
 import './ajudar.dart';
 //import './adotar2.dart';
 import 'cadastro/login.dart';

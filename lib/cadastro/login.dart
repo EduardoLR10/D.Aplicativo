@@ -66,6 +66,7 @@ class LoginFormState extends State<LoginForm> {
                   return new Text("carregando");
                   break;
                 default:
+                  //print(snapshot.data);
                   return new Text(snapshot.data.toString());
                   break;
               }

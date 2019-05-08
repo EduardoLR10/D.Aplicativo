@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-//import 'adotar.dart';
-import 'assets/images.dart';
+import '../assets/images.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AdotarState2 extends StatelessWidget {
   final name;
@@ -416,51 +419,80 @@ class AdotarState2 extends StatelessWidget {
                 ),
               ),
               new Padding(
-                  padding: EdgeInsets.symmetric(vertical: 30, horizontal: 50),
-                  child: new FlatButton(
-                    onPressed: () {
-                      print('Cliquei');
-                    },
-                    child: new GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, 'LOGINPAGE');
-                      },
-                      child: Container(
-                        height: 40.0,
-                        width: 232.0,
-                        margin: const EdgeInsets.symmetric(vertical: 6.0),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black38,
-                              blurRadius: 1.0,
-                              spreadRadius: 1.0,
-                              offset: Offset(
-                                0.0,
-                                1.0,
-                              ),
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(2.0),
-                          color: Color(0xfffdcf58),
-                        ),
-                        child: Center(
-                          child: new Text(
-                            "PRETENDO ADOTAR",
-                            style: TextStyle(
-                              fontFamily: 'Roboto',
-                              color: Color(0xff434343),
-                              fontSize: 16,
-                            ),
+                padding: EdgeInsets.symmetric(vertical: 30, horizontal: 50),
+                child: new FlatButton(
+                  onPressed: () async {
+                    final FirebaseUser user = await _auth.currentUser();
+                    checkanimals();
+                    print('Cliquei');
+                  },
+                  child: new Container(
+                    height: 40.0,
+                    width: 232.0,
+                    margin: const EdgeInsets.symmetric(vertical: 6.0),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black38,
+                          blurRadius: 1.0,
+                          spreadRadius: 1.0,
+                          offset: Offset(
+                            0.0,
+                            1.0,
                           ),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(2.0),
+                      color: Color(0xfffdcf58),
+                    ),
+                    child: Center(
+                      child: new Text(
+                        "PRETENDO ADOTAR",
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: Color(0xff434343),
+                          fontSize: 16,
                         ),
                       ),
                     ),
-                  ))
+                  ),
+                ),
+              )
             ],
           );
         },
       ),
     );
+  }
+
+  StreamBuilder _checkanimals() {
+    //print(name);
+    return StreamBuilder(
+        stream: Firestore.instance
+            .collection('animals')
+            .where('nome', isEqualTo: "Bob")
+            .snapshots()
+            .map((snap) => snap.documents.map((snap) => snap.data)),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return new Text("carregando");
+              break;
+            default:
+              print(name);
+              return new Text("teste");
+              break;
+          }
+        });
+  }
+
+  void checkanimals() async {
+    print(name);
+    final FirebaseUser user = await _auth.currentUser();
+    Firestore.instance
+            .collection('animals')
+            .document('bob').setData({'dono' : ('users/' + user.uid), 'available' : false}, merge: true);
+    
+            
   }
 }

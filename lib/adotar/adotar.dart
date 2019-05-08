@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'assets/images.dart';
+import '../assets/images.dart';
 import './adotar2.dart';
 
 class AdotarPage extends StatefulWidget {
