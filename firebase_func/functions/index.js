@@ -23,7 +23,11 @@ exports.interesseTrigger = functions.firestore.document(
                         "notification": {
                             "title": "Novo interessado em Nele", //+ newValue.nome,
                             "body": "Verificar interessados",
-                            "sound": "default"
+                        },
+                        	"data": {
+                        		"sound": "default",
+                        		"click_action" : "FLUTTER_NOTIFICATION_CLICK",
+                        		"screen" : "ADOTARPAGE1",
                         }
                     }
                     return admin.messaging().sendToDevice (token, payload).then((response) => {

@@ -73,9 +73,11 @@ class IntroState extends State<IntroPage> {
     _messaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print("onMessage: $message");
+        Navigator.of(context).pushNamed(message['data']['screen']);
       },
       onResume: (Map<String, dynamic> message) {
         print("onResume: $message");
+        Navigator.of(context).pushNamed(message['screen']);
       },
       onLaunch: (Map<String, dynamic> message) {
         print("onLaunch: $message");
