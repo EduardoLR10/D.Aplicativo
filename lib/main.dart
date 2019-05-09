@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 
 import './adotar/adotar.dart';
 import './ajudar.dart';
@@ -59,6 +60,16 @@ class IntroPage extends StatefulWidget {
 
 class IntroState extends State<IntroPage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+
+ // final FirebaseMessaging _messaging = FirebaseMessaging();
+
+ // @override
+ // void initState() {
+  //  super.initState();
+
+  //  _messaging.getToken().then((token) {print(token);});
+ //   _messaging.requestNotificationPermissions();
+ // }
 
   @override
   Widget build(BuildContext context)  {
