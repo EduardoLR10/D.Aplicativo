@@ -3,6 +3,7 @@ import 'package:flutter/painting.dart';
 import '../assets/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../entitys/animal.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -444,7 +445,13 @@ class AdotarState2 extends State<Adotar2> {
                     final FirebaseUser user = await _auth.currentUser();
                     checkanimals();
                     setState(() {
-                      click = true;
+                      if(user == null)
+                      {
+                        Navigator.pushNamed(context, 'LOGINPAGE');
+                      }
+                      else {
+                        click = true;
+                      }
                     });
                   },
                   child: new Container(

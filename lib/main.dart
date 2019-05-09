@@ -12,6 +12,8 @@ import 'cadastro/cad_log.dart';
 import 'common.dart';
 import 'use_camera.dart';
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
 void main() {
   avaCam();
   runApp(MaterialApp(
@@ -60,6 +62,7 @@ class IntroPage extends StatefulWidget {
 
 class IntroState extends State<IntroPage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  var _token;
 
   final FirebaseMessaging _messaging = FirebaseMessaging();
 
@@ -67,8 +70,23 @@ class IntroState extends State<IntroPage> {
   void initState() {
     super.initState();
 
-    _messaging.getToken().then((token) {print(token);});
+    _messaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        print("onMessage: $message");
+      },
+      onResume: (Map<String, dynamic> message) {
+        print("onResume: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print("onLaunch: $message");
+      },
+    );
+
     _messaging.requestNotificationPermissions();
+    _messaging.getToken().then((token) {print (token);});
+    _messaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
   }
 
   @override
