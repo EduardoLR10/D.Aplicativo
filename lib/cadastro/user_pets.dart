@@ -3,6 +3,7 @@ import 'package:flutter/painting.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cadastro_pessoal_elementos.dart';
 import '../adotar/adotar.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../common.dart';
 
@@ -18,6 +19,7 @@ class MyPetsPage extends StatefulWidget {
 class MyPetsPageState extends State<MyPetsPage> {
 
   String user;
+  DocumentReference reference;
 
   @override
   initState() {
@@ -29,6 +31,7 @@ class MyPetsPageState extends State<MyPetsPage> {
   doAsyncStuff() async {
     FirebaseUser currentUser = await _auth.currentUser();
     this.user = currentUser.uid;
+    this.reference = Firestore.instance.collection('users').document(user);
     print(this.user);
   }
 
@@ -44,7 +47,7 @@ class MyPetsPageState extends State<MyPetsPage> {
       body: new StreamBuilder(
           stream: Firestore.instance
               .collection('animals')
-              .where('dono', isEqualTo: (Firestore.instance.document(('/users/' + user))))
+              .where('dono', isEqualTo: (this.reference))
               .snapshots()
               .map((snap) => snap.documents.map((document) {
                     var ref = document.data['interessados']
