@@ -88,7 +88,8 @@ class MyDrawerState extends State<MyDrawer> {
                                 shape: BoxShape.circle,
                                 image: new DecorationImage(
                                     alignment: Alignment(0, 0),
-                                    image: new NetworkImage((this.image != null) ? this.image : ''),
+                                    image: new NetworkImage(
+                                        (this.image != null) ? this.image : ''),
                                     fit: BoxFit.cover),
                               ),
                             ),
@@ -109,7 +110,8 @@ class MyDrawerState extends State<MyDrawer> {
                                 alignment: Alignment.centerLeft,
                                 constraints: BoxConstraints(
                                     minWidth: 234, maxHeight: 48),
-                                child: TextTopics((this.name != null) ? this.name : ''),
+                                child: TextTopics(
+                                    (this.name != null) ? this.name : ''),
                               ),
                               Icon(
                                 Icons.expand_more,
@@ -127,14 +129,14 @@ class MyDrawerState extends State<MyDrawer> {
                   ),
                 ),
                 TopicCont(
-                  text: 'Atalhos',
-                  color: 0xfffee29b,
+                  text: 'Meus Pets',
+                  color: 0xffe6e7e8,
                   iconData: Icons.pets,
                   iconColor: 0xff434343,
                 ),
                 TopicCont(
                   text: 'Informações',
-                  color: 0xffcfe9e5,
+                  color: 0xffe6e7e8,
                   iconData: Icons.info,
                 ),
                 TopicCont(
@@ -194,6 +196,14 @@ class TopicCont extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () async {
+        FirebaseUser currentUser = await _auth.currentUser();
+        if (currentUser == null) {
+          Navigator.pushNamed(context, 'LOGINPAGE');
+        } else {
+          Navigator.pushNamed(context, 'MYPETSPAGE');
+        }
+      },
       child: Container(
         alignment: Alignment.centerLeft,
         height: 48,

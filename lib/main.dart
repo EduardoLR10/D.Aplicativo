@@ -11,6 +11,7 @@ import 'cadastro/login.dart';
 import 'cadastro/cad_log.dart';
 import 'common.dart';
 import 'use_camera.dart';
+import 'cadastro/user_pets.dart';
 
 void main() {
   avaCam();
@@ -22,6 +23,7 @@ void main() {
       'AJUDAR': (BuildContext context) => new Ajudar(),
       'LOGINPAGE' : (BuildContext context) => new LoginPage(),
       'CADLOGPAGE' : (BuildContext context) => new CadLogPage(),
+      'MYPETSPAGE' : (BuildContext context) => new MyPetsPage(),
     },
     home: StartPage(),
   ));
