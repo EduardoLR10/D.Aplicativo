@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -11,6 +12,8 @@ import 'cadastro/login.dart';
 import 'cadastro/cad_log.dart';
 import 'common.dart';
 import 'use_camera.dart';
+import 'cadastro/user_pets.dart';
+import 'cadastro/users_list.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -24,6 +27,7 @@ void main() {
       'AJUDAR': (BuildContext context) => new Ajudar(),
       'LOGINPAGE' : (BuildContext context) => new LoginPage(),
       'CADLOGPAGE' : (BuildContext context) => new CadLogPage(),
+      'MYPETSPAGE' : (BuildContext context) => new MyPetsPage(),
     },
     home: StartPage(),
   ));
@@ -128,7 +132,7 @@ class IntroState extends State<IntroPage> {
       //appBar: IntroAppBar(),
       key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
-      drawer: MyDrawer(name: 'Giordano Monteiro', image: 'assets/cat1.png',),
+      drawer: MyDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
@@ -140,7 +144,8 @@ class IntroState extends State<IntroPage> {
               IconButton (
                 icon: IconIntro(),
                 tooltip:  'Menu',
-                onPressed: (){scaffoldKey.currentState.openDrawer();},
+                onPressed: () async{
+                  scaffoldKey.currentState.openDrawer();},
               ),
           ),
           Padding(

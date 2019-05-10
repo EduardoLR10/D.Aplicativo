@@ -18,7 +18,7 @@ class CadastroPage extends StatelessWidget {
       key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfffafafa),
-      drawer: MyDrawer(name: 'Giordano Monteiro', image: 'assets/cat1.png',),
+      drawer: MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
