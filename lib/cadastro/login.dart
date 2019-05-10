@@ -64,23 +64,23 @@ class LoginFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _GoogleSignInSection(),
-          StreamBuilder(
-              stream: Firestore.instance
-                  .collection('users')
-                  .where('estado', isEqualTo: "DF")
-                  .snapshots()
-                  .map((snap) => snap.documents.map((snap) => snap.data)),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return new Text("carregando");
-                    break;
-                  default:
-                    //print(snapshot.data);
-                    return new Text(snapshot.data.toString());
-                    break;
-                }
-              }),
+          //StreamBuilder(
+          //    stream: Firestore.instance
+          //        .collection('users')
+          //        .where('estado', isEqualTo: "DF")
+          //        .snapshots()
+          //        .map((snap) => snap.documents.map((snap) => snap.data)),
+          //    builder: (context, snapshot) {
+          //      switch (snapshot.connectionState) {
+          //        case ConnectionState.waiting:
+          //          return new Text("carregando");
+          //          break;
+          //        default:
+          //          //print(snapshot.data);
+          //          return new Text(snapshot.data.toString());
+          //          break;
+           //     }
+           //   }),
         ],
       ),
     );
@@ -175,29 +175,18 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
   bool _success;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        FlatButton(
-          child: FaceGoogleCont(
-            text: TextFaceGoogle("  SIGN IN WITH GOOGLE"),
-            color: 0xfff15f5c,
-            icon: GoogleIcon(),
-          ),
-          onPressed: () async {
-            _signInWithGoogle();
-          },
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _success == null
-                ? ''
-                : (_success ? 'Successfully signed in' : 'Sign in failed'),
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
+    return FlatButton(
+      child: FaceGoogleCont(
+        text: TextFaceGoogle("  SIGN IN WITH GOOGLE"),
+        color: 0xfff15f5c,
+        icon: GoogleIcon(),
+      ),
+      onPressed: () async {
+        _signInWithGoogle();
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(_success ? 'Sucessfully signed in' : 'Sign in failed'),
+        ));
+      },
     );
   }
 
@@ -215,6 +204,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(user.displayName != null);
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
+
+    Firestore.instance
+        .collection('users')
+        .document(user.uid)
+        .setData({'nome_user': (user.displayName)}, merge: true);
 
     final FirebaseUser currentUser = await _auth.currentUser();
 
