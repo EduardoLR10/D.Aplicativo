@@ -22,7 +22,6 @@ exports.interesseTrigger = functions.firestore.document(
 
 				if (newValue.available != previousValue.available)
 				{
-
 					var payload = {
 						"notification": {
 							"title": "Confirmada a sua adoção do pet " + newValue.nome,
@@ -39,7 +38,7 @@ exports.interesseTrigger = functions.firestore.document(
 					}).catch((err) => {
 						console.log(err);})
 				}
-				else if (newValue.interessados.sources > previousValue.interessados.sources)
+				else
 				{
 					var payload = {
 						"notification": {
