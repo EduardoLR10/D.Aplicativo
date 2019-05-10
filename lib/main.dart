@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import './adotar/adotar.dart';
@@ -67,7 +68,7 @@ class IntroState extends State<IntroPage> {
       //appBar: IntroAppBar(),
       key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
-      drawer: MyDrawer(name: 'Giordano Monteiro', image: 'assets/cat1.png',),
+      drawer: MyDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
@@ -79,7 +80,8 @@ class IntroState extends State<IntroPage> {
               IconButton (
                 icon: IconIntro(),
                 tooltip:  'Menu',
-                onPressed: (){scaffoldKey.currentState.openDrawer();},
+                onPressed: () async{
+                  scaffoldKey.currentState.openDrawer();},
               ),
           ),
           Padding(

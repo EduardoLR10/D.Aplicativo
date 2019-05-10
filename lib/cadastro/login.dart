@@ -24,10 +24,7 @@ class LoginPage extends StatelessWidget {
       key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfffafafa),
-      drawer: MyDrawer(
-        name: 'Giordano Monteiro',
-        image: 'assets/cat1.png',
-      ),
+      drawer: MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -64,23 +61,23 @@ class LoginFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _GoogleSignInSection(),
-          //StreamBuilder(
-          //    stream: Firestore.instance
-          //        .collection('users')
-          //        .where('estado', isEqualTo: "DF")
-          //        .snapshots()
-          //        .map((snap) => snap.documents.map((snap) => snap.data)),
-          //    builder: (context, snapshot) {
-          //      switch (snapshot.connectionState) {
-          //        case ConnectionState.waiting:
-          //          return new Text("carregando");
-          //          break;
-          //        default:
-          //          //print(snapshot.data);
-          //          return new Text(snapshot.data.toString());
-          //          break;
-           //     }
-           //   }),
+          StreamBuilder(
+              stream: Firestore.instance
+                  .collection('users')
+                  .where('estado', isEqualTo: "DF")
+                  .snapshots()
+                  .map((snap) => snap.documents.map((snap) => snap.data)),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return new Text("carregando");
+                    break;
+                  default:
+                    //print(snapshot.data);
+                    return new Text(snapshot.data.toString());
+                    break;
+                }
+              }),
         ],
       ),
     );
@@ -208,7 +205,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     Firestore.instance
         .collection('users')
         .document(user.uid)
-        .setData({'nome_user': (user.displayName)}, merge: true);
+        .setData({'nome_user': (user.displayName), 'profile_photo' : (user.photoUrl)}, merge: true);
 
     final FirebaseUser currentUser = await _auth.currentUser();
 
