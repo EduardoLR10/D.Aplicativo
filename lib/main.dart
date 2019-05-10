@@ -12,6 +12,7 @@ import 'cadastro/cad_log.dart';
 import 'common.dart';
 import 'use_camera.dart';
 import 'cadastro/user_pets.dart';
+import 'cadastro/users_list.dart';
 
 void main() {
   avaCam();

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cadastro_pessoal_elementos.dart';
-import '../common.dart';
 import '../adotar/adotar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../common.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -86,7 +86,7 @@ class MyPetsPageState extends State<MyPetsPage> {
                           (snapshot.data.elementAt(position) ==
                                   snapshot.data.last)
                               ? 8.0
-                              : 0.0);
+                              : 0.0, 1);
                     });
             }
           }),
