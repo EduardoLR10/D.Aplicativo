@@ -6,7 +6,6 @@ import '../icons/custom_icons.dart';
 import '../common.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -25,10 +24,7 @@ class LoginPage extends StatelessWidget {
       key: scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xfffafafa),
-      drawer: MyDrawer(
-        name: 'Giordano Monteiro',
-        image: 'assets/cat1.png',
-      ),
+      drawer: MyDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -65,23 +61,23 @@ class LoginFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _GoogleSignInSection(),
-          StreamBuilder(
-              stream: Firestore.instance
-                  .collection('users')
-                  .where('estado', isEqualTo: "DF")
-                  .snapshots()
-                  .map((snap) => snap.documents.map((snap) => snap.data)),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return new Text("carregando");
-                    break;
-                  default:
-                    //print(snapshot.data);
-                    return new Text(snapshot.data.toString());
-                    break;
-                }
-              }),
+          //StreamBuilder(
+          //   stream: Firestore.instance
+          //        .collection('users')
+          //        .where('estado', isEqualTo: "DF")
+          //        .snapshots()
+          //        .map((snap) => snap.documents.map((snap) => snap.data)),
+          //    builder: (context, snapshot) {
+          //      switch (snapshot.connectionState) {
+          //        case ConnectionState.waiting:
+          //          return new Text("carregando");
+          //          break;
+          //        default:
+          //          //print(snapshot.data);
+          //          return new Text(snapshot.data.toString());
+          //          break;
+          //      }
+          //    }),
         ],
       ),
     );
@@ -188,29 +184,15 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        FlatButton(
-          child: FaceGoogleCont(
-            text: TextFaceGoogle("  SIGN IN WITH GOOGLE"),
-            color: 0xfff15f5c,
-            icon: GoogleIcon(),
-          ),
-          onPressed: () async {
-            _signInWithGoogle();
-          },
-        ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _success == null
-                ? ''
-                : (_success ? 'Successfully signed in' : 'Sign in failed'),
-            style: TextStyle(color: Colors.red),
-          ),
-        )
-      ],
+    return FlatButton(
+      child: FaceGoogleCont(
+        text: TextFaceGoogle("  SIGN IN WITH GOOGLE"),
+        color: 0xfff15f5c,
+        icon: GoogleIcon(),
+      ),
+      onPressed: () async {
+        _signInWithGoogle();
+      },
     );
   }
 
@@ -229,20 +211,21 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    Firestore.instance
-        .collection('users')
-        .document(user.uid)
-        .setData({'nome_user': (user.displayName),'token' : _token}, merge: true);
+    Firestore.instance.collection('users').document(user.uid).setData(
+        {'nome_user': (user.displayName), 'profile_photo': (user.photoUrl)},
+        merge: true);
 
     final FirebaseUser currentUser = await _auth.currentUser();
 
     assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _success = true;
-      } else {
-        _success = false;
-      }
-    });
+    if (user != null) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('Sucessfully signed in'),
+        ));
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('Sign in failed'),
+        ));
+    }
   }
 }

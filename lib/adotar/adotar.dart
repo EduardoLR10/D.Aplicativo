@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import '../assets/images.dart';
 import './adotar2.dart';
+import '../cadastro/users_list.dart';
 import '../entitys/animal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -69,7 +70,8 @@ class AdotarState extends State<AdotarPage> {
                           (snapshot.data.elementAt(position) ==
                                   snapshot.data.last)
                               ? 8.0
-                              : 0.0);
+                              : 0.0,
+                          0);
                     });
             }
           }),
@@ -85,9 +87,10 @@ class AnimalCard extends StatelessWidget {
   final size;
   final location;
   final bottomcard;
+  final whichpage;
 
   AnimalCard(this.animalname, this.animalimagename, this.genre, this.status,
-      this.size, this.location, this.bottomcard);
+      this.size, this.location, this.bottomcard, this.whichpage);
 
   @override
   Widget build(BuildContext context) {
@@ -135,17 +138,27 @@ class AnimalCard extends StatelessWidget {
               new FlatButton(
                 padding: new EdgeInsets.all(0.0),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                        builder: (context) => new Adotar2(
-                            this.animalname,
-                            this.animalimagename,
-                            this.genre,
-                            this.size,
-                            this.status,
-                            this.location),
-                      ));
+                  if (this.whichpage == 0) {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                          builder: (context) => new Adotar2(
+                              this.animalname,
+                              this.animalimagename,
+                              this.genre,
+                              this.size,
+                              this.status,
+                              this.location),
+                        ));
+                  } else {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                          builder: (context) => new WantToAdoptListPage(
+                                this.animalname,
+                              ),
+                        ));
+                  }
                 },
                 child: new Column(
                   children: <Widget>[

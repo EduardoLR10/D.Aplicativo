@@ -1,117 +1,162 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class MyDrawer extends StatefulWidget {
-  MyDrawer({this.name: 'default', this.image});
-  final String name, image;
-
   @override
-  MyDrawerState createState() => MyDrawerState(name: name, image: image);
+  MyDrawerState createState() => MyDrawerState();
 }
 
-class MyDrawerState extends State<MyDrawer>{
-  MyDrawerState({this.name,@required this.image});
-  final String name, image;
+class MyDrawerState extends State<MyDrawer> {
+  String name, image;
+
+  @override
+  initState() {
+    super.initState();
+    doAsyncStuff();
+    name = '';
+    image = '';
+  }
+
+  doAsyncStuff() async {
+    FirebaseUser currentUser = await _auth.currentUser();
+    if (currentUser == null) {
+      setState(() {
+        this.name = 'No User Logged';
+        this.image =
+            'https://firebasestorage.googleapis.com/v0/b/meau-f8464.appspot.com/o/user.png?alt=media&token=0bdeed97-d9a1-4536-9e9b-7aa09da64e15';
+      });
+    } else {
+      setState(() {
+        this.name = currentUser.displayName;
+        this.image = currentUser.photoUrl;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Drawer (
+    return Drawer(
       child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: 1,
-        itemBuilder: (context, index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: 304.0,
-                height: 172.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(0.0),
-                  color: Color(0xff88c9bf),
-                  boxShadow: [BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 4.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(
-                      0.0,
-                      1.0,
-                    ),
-                  )
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.symmetric(vertical: 10),),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      height: 104,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8),),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            height: 64,
-                            width: 64,
-                            decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image: AssetImage(image),
-                              ),
-                            ),
-                          ),
-                        ],
+          shrinkWrap: true,
+          itemCount: 1,
+          itemBuilder: (context, index) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 304.0,
+                  height: 172.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0.0),
+                    color: Color(0xff88c9bf),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 4.0,
+                        spreadRadius: 1.0,
+                        offset: Offset(
+                          0.0,
+                          1.0,
+                        ),
+                      )
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
                       ),
-                    ),
-                    GestureDetector(
-                      child:
                       Container(
                         alignment: Alignment.centerLeft,
-                        height: 48,
+                        height: 104,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),),
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                            ),
                             Container(
                               alignment: Alignment.centerLeft,
-                              constraints: BoxConstraints(minWidth: 234,maxHeight: 48),
-                              child: TextTopics(name),
+                              height: 64,
+                              width: 64,
+                              decoration: new BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: new DecorationImage(
+                                    alignment: Alignment(0, 0),
+                                    image: new NetworkImage(
+                                        (this.image != null) ? this.image : ''),
+                                    fit: BoxFit.cover),
+                              ),
                             ),
-                            Icon(Icons.expand_more, size: 24,
-                              color: Color(0xff757575),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              TopicCont(text: 'Atalhos', color: 0xfffee29b, iconData: Icons.pets, iconColor: 0xff434343,),
-              TopicCont(text: 'Informações', color: 0xffcfe9e5, iconData: Icons.info,),
-              TopicCont(text: 'Configurações', color: 0xffe6e7e8, iconData: Icons.settings,),
-              GestureDetector(
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Color(0xff88c9bf),
+                      GestureDetector(
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          height: 48,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                constraints: BoxConstraints(
+                                    minWidth: 234, maxHeight: 48),
+                                child: TextTopics(
+                                    (this.name != null) ? this.name : ''),
+                              ),
+                              Icon(
+                                Icons.expand_more,
+                                size: 24,
+                                color: Color(0xff757575),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: TextTopics('Sair'),
                 ),
-              ),
-            ],
-          );
-        }
-      ),
+                TopicCont(
+                  text: 'Meus Pets',
+                  color: 0xffe6e7e8,
+                  iconData: Icons.pets,
+                  iconColor: 0xff434343,
+                ),
+                TopicCont(
+                  text: 'Informações',
+                  color: 0xffe6e7e8,
+                  iconData: Icons.info,
+                ),
+                TopicCont(
+                  text: 'Configurações',
+                  color: 0xffe6e7e8,
+                  iconData: Icons.settings,
+                ),
+                GestureDetector(
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Color(0xff88c9bf),
+                    ),
+                    child: TextTopics('Sair'),
+                  ),
+                ),
+              ],
+            );
+          }),
     );
   }
 }
@@ -123,7 +168,7 @@ class TextTopics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text (
+    return Text(
       string,
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
@@ -138,7 +183,11 @@ class TextTopics extends StatelessWidget {
 }
 
 class TopicCont extends StatelessWidget {
-  TopicCont({this.text: 'default', this.color, this.iconData, this.iconColor: 0xff757575});
+  TopicCont(
+      {this.text: 'default',
+      this.color,
+      this.iconData,
+      this.iconColor: 0xff757575});
 
   final IconData iconData;
   final String text;
@@ -147,34 +196,50 @@ class TopicCont extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child:
-        Container(
-          alignment: Alignment.centerLeft,
-          height: 48,
-            decoration: BoxDecoration(
-            color: Color(color),
-            ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),),
-              Icon(iconData, color: Color(iconColor), size: 24,),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),),
-              Container(
-                alignment: Alignment.centerLeft,
-                constraints: BoxConstraints(minWidth: 178,maxHeight: 48),
-                child: TextTopics(text),
-              ),
-              Icon(Icons.expand_more, size: 24,
-                  color: Color(0xff757575),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),),
-            ],
-          ),
+      onTap: () async {
+        FirebaseUser currentUser = await _auth.currentUser();
+        if (currentUser == null) {
+          Navigator.pushNamed(context, 'LOGINPAGE');
+        } else {
+          Navigator.pushNamed(context, 'MYPETSPAGE');
+        }
+      },
+      child: Container(
+        alignment: Alignment.centerLeft,
+        height: 48,
+        decoration: BoxDecoration(
+          color: Color(color),
         ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+            ),
+            Icon(
+              iconData,
+              color: Color(iconColor),
+              size: 24,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              constraints: BoxConstraints(minWidth: 178, maxHeight: 48),
+              child: TextTopics(text),
+            ),
+            Icon(
+              Icons.expand_more,
+              size: 24,
+              color: Color(0xff757575),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
