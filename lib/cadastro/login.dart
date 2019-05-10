@@ -212,7 +212,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(await user.getIdToken() != null);
 
     Firestore.instance.collection('users').document(user.uid).setData(
-        {'nome_user': (user.displayName), 'profile_photo': (user.photoUrl)},
+        {'nome_user': (user.displayName), 'profile_photo': (user.photoUrl), 'token': _token},
         merge: true);
 
     final FirebaseUser currentUser = await _auth.currentUser();
