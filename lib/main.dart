@@ -76,7 +76,7 @@ class IntroState extends State<IntroPage> {
     _messaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print("onMessage: $message");
-        onSelectNotification(message["notification"]["title"], message["notification"]["body"]);
+        onSelectNotification(message["notification"]["title"], message["notification"]["body"], message["data"]["screen"]);
       },
       onResume: (Map<String, dynamic> message) {
         print("onResume: $message");
@@ -93,7 +93,7 @@ class IntroState extends State<IntroPage> {
     );
   }
 
-  Future onSelectNotification(String title, String body) async {
+  Future onSelectNotification(String title, String body, String screen) async {
       showDialog(
           context: context,
           builder: (_) {
@@ -112,7 +112,21 @@ class IntroState extends State<IntroPage> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushNamed('ADOTARPAGE1');
+                    Navigator.of(context).pushNamed(screen);
+                  },
+                ),
+                FlatButton(
+                  child: Text('Cancelar',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: Color(0xff757575),
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
