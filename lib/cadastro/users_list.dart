@@ -34,7 +34,7 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
         body: new StreamBuilder(
             stream: Firestore.instance
                 .collection('animals')
-                .document(this.name)
+                .document(name.toString().toLowerCase())
                 .snapshots()
                 .map((snap) => snap.data['interessados']
                     .map((interessado) => interessado.path)),
@@ -50,7 +50,7 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
                   return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, position) {
-                        return AnimalCandidate(snapshot.data.element(position));
+                        return AnimalCandidate(snapshot.data.element(position), name.toString().toLowerCase());
                       });
               }
             }));
@@ -59,7 +59,8 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
 
 class AnimalCandidate extends StatelessWidget {
   String user;
-  AnimalCandidate(this.user);
+  String name;
+  AnimalCandidate(this.user, this.name);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,11 +70,29 @@ class AnimalCandidate extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text(this.user),
-            IconButton(icon: Icon(Icons.check_circle), onPressed: null),
-            IconButton(icon: Icon(Icons.close), onPressed: null),
+            IconButton(icon: Icon(Icons.check_circle), onPressed: (){checkAdot();}),
+            IconButton(icon: Icon(Icons.close), onPressed: (){notAdot();}),
           ],
         )
       ],
     );
   }
+  void checkAdot() async {
+    final FirebaseUser user = await _auth.currentUser();
+    Firestore.instance
+        .collection('animals')
+        .document(name)
+        .setData({'dono': ('users/' + user.uid), 'available': false,
+      'interessados' : []},
+        merge: true);
+  }
+  void notAdot() async {
+    final FirebaseUser user = await _auth.currentUser();
+    Firestore.instance
+        .collection('animals')
+        .document(name)
+        .setData({'interessados' : []},
+        merge: true);
+  }
+
 }
