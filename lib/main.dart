@@ -62,7 +62,6 @@ class IntroPage extends StatefulWidget {
 
 class IntroState extends State<IntroPage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
-  var _token;
 
   final FirebaseMessaging _messaging = FirebaseMessaging();
 
@@ -73,23 +72,54 @@ class IntroState extends State<IntroPage> {
     _messaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print("onMessage: $message");
-        Navigator.of(context).pushNamed(message['data']['screen']);
+        onSelectNotification(message["notification"]["title"], message["notification"]["body"]);
       },
       onResume: (Map<String, dynamic> message) {
         print("onResume: $message");
-        Navigator.of(context).pushNamed(message['screen']);
+        pushPageNot(message["data"]["screen"]);
       },
       onLaunch: (Map<String, dynamic> message) {
         print("onLaunch: $message");
+        pushPageNot(message["data"]["screen"]);
       },
     );
 
-    _messaging.requestNotificationPermissions();
-    _messaging.getToken().then((token) {print (token);});
     _messaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true)
     );
   }
+
+  Future onSelectNotification(String title, String body) async {
+      showDialog(
+          context: context,
+          builder: (_) {
+            return new AlertDialog(
+              title: Text(title),
+              content: Text(body),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('VERIFICAR',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: Color(0xff757575),
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('ADOTARPAGE1');
+                  },
+                ),
+              ],
+            );
+          }
+      );
+    }
+
+    Future pushPageNot (String name) async {
+      Navigator.of(context).pushNamed(name);
+    }
 
   @override
   Widget build(BuildContext context)  {

@@ -542,7 +542,8 @@ class AdotarState2 extends State<Adotar2> {
     Firestore.instance
         .collection('animals')
         .document((name.toString()).toLowerCase())
-        .setData({'dono': ('users/' + user.uid), 'available': false},
-            merge: true);
+        //.setData({'dono': ('users/' + user.uid), 'available': false},
+        //    merge: true);
+        .setData({'interessados' : FieldValue.arrayUnion( ['/users/' + user.uid])}, merge: true);
   }
 }

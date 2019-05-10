@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -173,6 +174,18 @@ class _GoogleSignInSection extends StatefulWidget {
 
 class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
   bool _success;
+
+  var _token;
+
+  final FirebaseMessaging _messaging = FirebaseMessaging();
+
+  void initState() {
+    super.initState();
+    _messaging.getToken().then((token) {setState(() {
+      _token = token;
+    });});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -215,6 +228,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(user.displayName != null);
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
+
+    Firestore.instance
+        .collection('users')
+        .document(user.uid)
+        .setData({'nome_user': (user.displayName),'token' : _token}, merge: true);
 
     final FirebaseUser currentUser = await _auth.currentUser();
 
