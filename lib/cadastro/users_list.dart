@@ -31,36 +31,27 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
           iconTheme: new IconThemeData(color: Color(0xffcfe9e5)),
           backgroundColor: Color(0xff88c9bf),
         ),
-        body: new StreamBuilder(
-            stream: Firestore.instance
-                .collection('animals')
-                .document(name.toString().toLowerCase())
-                .snapshots()
-                .map((snap) => snap.data['interessados']
-                    .map((interessado) => interessado.path)),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  //print("carregando");
-                  return Center(child: CircularProgressIndicator());
-                  break;
-                default:
-                  //print(snapshot.data.toString());
-                  //return new Text("teste");
-                  return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, position) {
-                        return AnimalCandidate(snapshot.data.element(position), name.toString().toLowerCase());
-                      });
-              }
-            }));
+        body: new ListView.builder(
+        itemCount: 1,
+        itemBuilder: (context, position) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            AnimalCandidate("VJ7pvBFTB8RExMRdwFkZI2u8cW12", "Eduardo Lemos", name.toString().toLowerCase()),
+            AnimalCandidate("I3mIhMgW0la0sEtQe80BaxKzANE3", "Giordano Monteiro", name.toString().toLowerCase()),
+          ],
+        );
+    })
+    );
   }
 }
 
 class AnimalCandidate extends StatelessWidget {
-  String user;
+  String _user;
+  String user_name;
   String name;
-  AnimalCandidate(this.user, this.name);
+  AnimalCandidate(this._user, this.user_name ,this.name);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,9 +60,12 @@ class AnimalCandidate extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text(this.user),
-            IconButton(icon: Icon(Icons.check_circle), onPressed: (){checkAdot();}),
-            IconButton(icon: Icon(Icons.close), onPressed: (){notAdot();}),
+            Text(this.user_name),
+            IconButton(icon: Icon(Icons.check_circle), onPressed: (){checkAdot();
+            Navigator.of(context).pop();}),
+            Divider(),
+            IconButton(icon: Icon(Icons.close), onPressed: (){notAdot();
+            Navigator.of(context).pop();}),
           ],
         )
       ],
@@ -79,12 +73,12 @@ class AnimalCandidate extends StatelessWidget {
   }
   void checkAdot() async {
     final FirebaseUser user = await _auth.currentUser();
+    DocumentReference ref = Firestore.instance.collection('users').document(_user);
     Firestore.instance
         .collection('animals')
         .document(name)
-        .setData({'dono': ('users/' + user.uid), 'available': false,
-      'interessados' : []},
-        merge: true);
+        .updateData({'dono': ref, 'available': false,
+      'interessados' : []},);
   }
   void notAdot() async {
     final FirebaseUser user = await _auth.currentUser();
