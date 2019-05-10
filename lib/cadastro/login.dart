@@ -61,23 +61,23 @@ class LoginFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _GoogleSignInSection(),
-          StreamBuilder(
-              stream: Firestore.instance
-                  .collection('users')
-                  .where('estado', isEqualTo: "DF")
-                  .snapshots()
-                  .map((snap) => snap.documents.map((snap) => snap.data)),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return new Text("carregando");
-                    break;
-                  default:
-                    //print(snapshot.data);
-                    return new Text(snapshot.data.toString());
-                    break;
-                }
-              }),
+          //StreamBuilder(
+          //   stream: Firestore.instance
+          //        .collection('users')
+          //        .where('estado', isEqualTo: "DF")
+          //        .snapshots()
+          //        .map((snap) => snap.documents.map((snap) => snap.data)),
+          //    builder: (context, snapshot) {
+          //      switch (snapshot.connectionState) {
+          //        case ConnectionState.waiting:
+          //          return new Text("carregando");
+          //          break;
+          //        default:
+          //          //print(snapshot.data);
+          //          return new Text(snapshot.data.toString());
+          //          break;
+          //      }
+          //    }),
         ],
       ),
     );
@@ -169,7 +169,6 @@ class _GoogleSignInSection extends StatefulWidget {
 }
 
 class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
-  bool _success;
   @override
   Widget build(BuildContext context) {
     return FlatButton(
@@ -180,9 +179,6 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
       ),
       onPressed: () async {
         _signInWithGoogle();
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(_success ? 'Sucessfully signed in' : 'Sign in failed'),
-        ));
       },
     );
   }
@@ -202,20 +198,21 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    Firestore.instance
-        .collection('users')
-        .document(user.uid)
-        .setData({'nome_user': (user.displayName), 'profile_photo' : (user.photoUrl)}, merge: true);
+    Firestore.instance.collection('users').document(user.uid).setData(
+        {'nome_user': (user.displayName), 'profile_photo': (user.photoUrl)},
+        merge: true);
 
     final FirebaseUser currentUser = await _auth.currentUser();
 
     assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _success = true;
-      } else {
-        _success = false;
-      }
-    });
+    if (user != null) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('Sucessfully signed in'),
+        ));
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('Sign in failed'),
+        ));
+    }
   }
 }
