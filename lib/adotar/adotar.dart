@@ -19,11 +19,6 @@ class AdotarPage extends StatefulWidget {
 
 class AdotarState extends State<AdotarPage> {
   //StreamSubscription<Event> ref2;
-  var ref = FirebaseDatabase.instance
-      .reference()
-      .child("animals")
-      .orderByChild("available")
-      .equalTo(false);
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +29,12 @@ class AdotarState extends State<AdotarPage> {
         backgroundColor: Color(0xFFffd358),
       ),
       body: new StreamBuilder(
-          stream: ref.onValue,
-          //stream: Firestore.instance
-          //    .collection('animals')
-          //    .where('available', isEqualTo: true)
-          //    .snapshots()
-          //    .map((snap) => snap.documents.map((document) {
-          //          var ref = document.data['interessados']
-          //              .map((interessado) => interessado.path);
-          //          document.data['interessados'] = ref;
-          //          return document.data;
-          //        })),
+          stream: FirebaseDatabase.instance
+              .reference()
+              .child("animals")
+              .orderByChild("available")
+              .equalTo(true)
+              .onValue,
           builder: (context, snap) {
             switch (snap.connectionState) {
               case ConnectionState.waiting:
@@ -54,6 +44,9 @@ class AdotarState extends State<AdotarPage> {
               default:
                 //print(snapshot.data.toString());
                 //return new Text("teste");
+                if(snap.data.snapshot == null){
+                  print('dei null');
+                }
                 DataSnapshot snapshot = snap.data.snapshot;
                 List item = [];
                 List _list = [];
@@ -64,12 +57,14 @@ class AdotarState extends State<AdotarPage> {
                     item.add(f);
                   }
                 });
+                //print(item.length);
                 return ListView.builder(
                     itemCount: item.length,
                     itemBuilder: (context, position) {
                       return AnimalCard(
                           item[position]['nome'],
                           item[position]['url'],
+                          item[position]['id'],
                           item[position]['genero'].toString().toUpperCase(),
                           item[position]['idade'].toString().toUpperCase(),
                           item[position]['porte'].toString().toUpperCase(),
@@ -92,8 +87,9 @@ class AnimalCard extends StatelessWidget {
   final location;
   final bottomcard;
   final whichpage;
+  final id;
 
-  AnimalCard(this.animalname, this.animalimagename, this.genre, this.status,
+  AnimalCard(this.animalname, this.animalimagename, this.id, this.genre, this.status,
       this.size, this.location, this.bottomcard, this.whichpage);
 
   @override
@@ -159,7 +155,7 @@ class AnimalCard extends StatelessWidget {
                         context,
                         new MaterialPageRoute(
                           builder: (context) => new WantToAdoptListPage(
-                                this.animalname,
+                                this.id,
                               ),
                         ));
                   }

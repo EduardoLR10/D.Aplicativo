@@ -55,12 +55,13 @@ class MyPetsPageState extends State<MyPetsPage> {
                       return AnimalCard(
                           item[position]['nome'],
                           item[position]['url'],
+                          item[position]['id'],
                           item[position]['genero'].toString().toUpperCase(),
                           item[position]['idade'].toString().toUpperCase(),
                           item[position]['porte'].toString().toUpperCase(),
                           item[position]['endereco'].toString().toUpperCase(),
                           (item[position] == item.last) ? 8.0 : 0.0,
-                          0);
+                          1);
                     });
             }
           }),

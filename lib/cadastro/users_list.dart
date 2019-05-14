@@ -3,7 +3,9 @@ import 'package:flutter/painting.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cadastro_pessoal_elementos.dart';
 import '../adotar/adotar.dart';
+import '../common.dart' as userthings;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -18,9 +20,15 @@ class WantToAdoptListPage extends StatefulWidget {
 }
 
 class WantToAdoptListState extends State<WantToAdoptListPage> {
-  final name;
+  final id;
+  WantToAdoptListState(this.id);
 
-  WantToAdoptListState(this.name);
+  var ref = FirebaseDatabase.instance
+          .reference()
+          .child("animals/"+"1"+"/interessados").onChildAdded.listen((Event event) {
+            print('${event.snapshot.value}');
+          });
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,27 +39,61 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
           iconTheme: new IconThemeData(color: Color(0xffcfe9e5)),
           backgroundColor: Color(0xff88c9bf),
         ),
-        body: new ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, position) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            AnimalCandidate("VJ7pvBFTB8RExMRdwFkZI2u8cW12", "Eduardo Lemos", name.toString().toLowerCase()),
-            AnimalCandidate("I3mIhMgW0la0sEtQe80BaxKzANE3", "Giordano Monteiro", name.toString().toLowerCase()),
-          ],
+        body: new StreamBuilder(
+          stream: FirebaseDatabase.instance
+          .reference()
+          .child("animals/"+this.id.toString()+"/interessados").onValue,
+          builder: (context, snap) {
+            switch (snap.connectionState) {
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
+                break;
+              default:
+                DataSnapshot snapshot = snap.data.snapshot;
+                List item = [];
+                List _list = [];
+                _list = snapshot.value;
+                _list.forEach((f) {
+                  if (f != null) {
+                    item.add(f);
+                  }
+                });
+                return ListView.builder(
+                    itemCount: item.length,
+                    itemBuilder: (context, position) {
+                      return AnimalCandidate(
+                          item[position]);
+                    });;
+            }
+          })
+        
+        //new ListView.builder(
+        //itemCount: 1,
+        //itemBuilder: (context, position) {
+        //return Column(
+        //  crossAxisAlignment: CrossAxisAlignment.center,
+        //  mainAxisAlignment: MainAxisAlignment.start,
+        //  children: <Widget>[
+        //    AnimalCandidate("VJ7pvBFTB8RExMRdwFkZI2u8cW12", "Eduardo Lemos", name.toString().toLowerCase()),
+        //    AnimalCandidate("I3mIhMgW0la0sEtQe80BaxKzANE3", "Giordano Monteiro", name.toString().toLowerCase()),
+        //  ],
         );
-    })
-    );
+    }
+    
   }
-}
 
 class AnimalCandidate extends StatelessWidget {
   String _user;
-  String user_name;
   String name;
-  AnimalCandidate(this._user, this.user_name ,this.name);
+  String hashkey;
+  AnimalCandidate(this.hashkey);
+  var user_data = FirebaseDatabase.instance
+          .reference()
+          .child("users")
+          .orderByChild("user_uid")
+          .equalTo("VJ7pvBFTB8RExMRdwFkZI2u8cW12").onChildAdded.listen((Event event) {
+            print('${event.snapshot.value}');
+          });
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,7 +102,7 @@ class AnimalCandidate extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text(this.user_name),
+            Text("teste"),
             IconButton(icon: Icon(Icons.check_circle), onPressed: (){checkAdot();
             Navigator.of(context).pop();}),
             Divider(),
@@ -88,5 +130,4 @@ class AnimalCandidate extends StatelessWidget {
         .setData({'interessados' : []},
         merge: true);
   }
-
 }
