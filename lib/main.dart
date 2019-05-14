@@ -15,8 +15,6 @@ import 'use_camera.dart';
 import 'cadastro/user_pets.dart';
 import 'cadastro/users_list.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 void main() {
   avaCam();
   runApp(MaterialApp(
