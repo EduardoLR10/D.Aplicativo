@@ -6,6 +6,9 @@ import '../cadastro/users_list.dart';
 import '../entitys/animal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+import 'dart:async';
 
 class AdotarPage extends StatefulWidget {
   @override
@@ -15,7 +18,12 @@ class AdotarPage extends StatefulWidget {
 }
 
 class AdotarState extends State<AdotarPage> {
-  final index = 1.0;
+  //StreamSubscription<Event> ref2;
+  var ref = FirebaseDatabase.instance
+      .reference()
+      .child("animals")
+      .orderByChild("available")
+      .equalTo(false);
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +34,19 @@ class AdotarState extends State<AdotarPage> {
         backgroundColor: Color(0xFFffd358),
       ),
       body: new StreamBuilder(
-          stream: Firestore.instance
-              .collection('animals')
-              .where('available', isEqualTo: true)
-              .snapshots()
-              .map((snap) => snap.documents.map((document) {
-                    var ref = document.data['interessados']
-                        .map((interessado) => interessado.path);
-                    document.data['interessados'] = ref;
-                    return document.data;
-                  })),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
+          stream: ref.onValue,
+          //stream: Firestore.instance
+          //    .collection('animals')
+          //    .where('available', isEqualTo: true)
+          //    .snapshots()
+          //    .map((snap) => snap.documents.map((document) {
+          //          var ref = document.data['interessados']
+          //              .map((interessado) => interessado.path);
+          //          document.data['interessados'] = ref;
+          //          return document.data;
+          //        })),
+          builder: (context, snap) {
+            switch (snap.connectionState) {
               case ConnectionState.waiting:
                 //print("carregando");
                 return Center(child: CircularProgressIndicator());
@@ -45,32 +54,27 @@ class AdotarState extends State<AdotarPage> {
               default:
                 //print(snapshot.data.toString());
                 //return new Text("teste");
+                DataSnapshot snapshot = snap.data.snapshot;
+                List item = [];
+                List _list = [];
+//it gives all the documents in this list.
+                _list = snapshot.value;
+                _list.forEach((f) {
+                  if (f != null) {
+                    item.add(f);
+                  }
+                });
                 return ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: item.length,
                     itemBuilder: (context, position) {
                       return AnimalCard(
-                          snapshot.data.elementAt(position)['nome'],
-                          snapshot.data.elementAt(position)['url'],
-                          snapshot.data
-                              .elementAt(position)['genero']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['idade']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['porte']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['endereco']
-                              .toString()
-                              .toUpperCase(),
-                          (snapshot.data.elementAt(position) ==
-                                  snapshot.data.last)
-                              ? 8.0
-                              : 0.0,
+                          item[position]['nome'],
+                          item[position]['url'],
+                          item[position]['genero'].toString().toUpperCase(),
+                          item[position]['idade'].toString().toUpperCase(),
+                          item[position]['porte'].toString().toUpperCase(),
+                          item[position]['endereco'].toString().toUpperCase(),
+                          (item[position] == item.last) ? 8.0 : 0.0,
                           0);
                     });
             }
