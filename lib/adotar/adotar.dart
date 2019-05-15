@@ -138,12 +138,14 @@ class AnimalCard extends StatelessWidget {
               new FlatButton(
                 padding: new EdgeInsets.all(0.0),
                 onPressed: () {
+                  //print(this.id);
                   if (this.whichpage == 0) {
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
                           builder: (context) => new Adotar2(
                               this.animalname,
+                              this.id,
                               this.animalimagename,
                               this.genre,
                               this.size,

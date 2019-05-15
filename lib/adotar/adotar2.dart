@@ -3,12 +3,14 @@ import 'package:flutter/painting.dart';
 import '../assets/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../entitys/animal.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class Adotar2 extends StatefulWidget {
+  final id;
   final name;
   final imagename;
   final genre;
@@ -16,25 +18,26 @@ class Adotar2 extends StatefulWidget {
   final size;
   final location;
 
-  Adotar2(this.name, this.imagename, this.genre, this.size, this.status,
+  Adotar2(this.name, this.id, this.imagename, this.genre, this.size, this.status,
       this.location);
   @override
   State<StatefulWidget> createState() {
-    return new AdotarState2(name, imagename, genre, size, status, location);
+    return new AdotarState2(name, id, imagename, genre, size, status, location);
   }
 }
 
 class AdotarState2 extends State<Adotar2> {
-  final name;
-  final imagename;
-  final genre;
-  final status;
-  final size;
-  final location;
+  var id;
+  var name;
+  var imagename;
+  var genre;
+  var status;
+  var size;
+  var location;
 
   var click = false;
 
-  AdotarState2(this.name, this.imagename, this.genre, this.size, this.status,
+  AdotarState2(this.name, this.id, this.imagename, this.genre, this.size, this.status,
       this.location);
 
   @override
@@ -443,7 +446,6 @@ class AdotarState2 extends State<Adotar2> {
                 child: new FlatButton(
                   onPressed: () async {
                     final FirebaseUser user = await _auth.currentUser();
-                    checkanimals();
                     setState(() {
                       if(user == null)
                       {
@@ -451,6 +453,7 @@ class AdotarState2 extends State<Adotar2> {
                       }
                       else {
                         click = true;
+                        checkanimals();
                       }
                     });
                   },
@@ -486,28 +489,6 @@ class AdotarState2 extends State<Adotar2> {
                   ),
                 ),
               ),
-              click
-                  ? StreamBuilder(
-                      stream: Firestore.instance
-                          .collection('animals')
-                          .where('nome', isEqualTo: name.toString())
-                          .snapshots()
-                          .map((snap) =>
-                              snap.documents.map((snap) => snap.data)),
-                      builder: (context, snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.waiting:
-                            print("carregando");
-                            return Padding(padding: EdgeInsets.all(0));
-                            break;
-                          default:
-                            print(snapshot.data.toString());
-                            //return new Text("teste");
-                            return Padding(padding: EdgeInsets.all(0));
-                            break;
-                        }
-                      })
-                  : Padding(padding: EdgeInsets.all(0)),
             ],
           );
         },
@@ -539,11 +520,34 @@ class AdotarState2 extends State<Adotar2> {
   void checkanimals() async {
     //print(name);
     final FirebaseUser user = await _auth.currentUser();
-    Firestore.instance
-        .collection('animals')
-        .document((name.toString()).toLowerCase())
-        //.setData({'dono': ('users/' + user.uid), 'available': false},
-        //    merge: true);
-        .setData({'interessados' : FieldValue.arrayUnion( ['/users/' + user.uid])}, merge: true);
+    var size = 0;
+    //print(this.id.toString());
+    FirebaseDatabase.instance
+    .reference()
+    .child("animals")
+    .child(this.id.toString())
+    .child("interessados")
+    .once()
+    .then((onValue){
+      List data = onValue.value;
+      //print("testeeeeeeeeeeeeeeeeeeeee" + data.toString());
+      if(data == null){
+        size = 0;
+      }else{
+        size = data.length;
+      }
+      print(size);
+      FirebaseDatabase.instance
+      .reference()
+      .child("animals")
+      .child(this.id.toString())
+      .child("interessados/" + size.toString())
+      .set({
+        "id": size,
+        "user_uid": user.uid
+      }).whenComplete((){
+        print('passei por aqui');
+      });
+    });
   }
 }
