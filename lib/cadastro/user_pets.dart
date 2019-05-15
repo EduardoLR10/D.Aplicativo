@@ -18,8 +18,7 @@ class MyPetsPage extends StatefulWidget {
 }
 
 class MyPetsPageState extends State<MyPetsPage> {
-
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Color(0xfffafafa),
@@ -30,39 +29,46 @@ class MyPetsPageState extends State<MyPetsPage> {
       ),
       body: new StreamBuilder(
           stream: FirebaseDatabase.instance
-          .reference()
-          .child("animals")
-          .orderByChild("dono")
-          .equalTo(userthings.user.uid).onValue,
+              .reference()
+              .child("animals")
+              .orderByChild("dono")
+              .equalTo(userthings.user.uid)
+              .onValue,
           builder: (context, snap) {
             switch (snap.connectionState) {
               case ConnectionState.waiting:
                 return Center(child: CircularProgressIndicator());
                 break;
               default:
-                DataSnapshot snapshot = snap.data.snapshot;
-                List item = [];
-                List _list = [];
-                _list = snapshot.value;
-                _list.forEach((f) {
-                  if (f != null) {
-                    item.add(f);
-                  }
-                });
-                return ListView.builder(
-                    itemCount: item.length,
-                    itemBuilder: (context, position) {
-                      return AnimalCard(
-                          item[position]['nome'],
-                          item[position]['url'],
-                          item[position]['id'],
-                          item[position]['genero'].toString().toUpperCase(),
-                          item[position]['idade'].toString().toUpperCase(),
-                          item[position]['porte'].toString().toUpperCase(),
-                          item[position]['endereco'].toString().toUpperCase(),
-                          (item[position] == item.last) ? 8.0 : 0.0,
-                          1);
-                    });
+                if (snap.data.snapshot.value == null) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0),
+                  );
+                } else {
+                  DataSnapshot snapshot = snap.data.snapshot;
+                  List item = [];
+                  List _list = [];
+                  _list = snapshot.value;
+                  _list.forEach((f) {
+                    if (f != null) {
+                      item.add(f);
+                    }
+                  });
+                  return ListView.builder(
+                      itemCount: item.length,
+                      itemBuilder: (context, position) {
+                        return AnimalCard(
+                            item[position]['nome'],
+                            item[position]['url'],
+                            item[position]['id'],
+                            item[position]['genero'].toString().toUpperCase(),
+                            item[position]['idade'].toString().toUpperCase(),
+                            item[position]['porte'].toString().toUpperCase(),
+                            item[position]['endereco'].toString().toUpperCase(),
+                            (item[position] == item.last) ? 8.0 : 0.0,
+                            1);
+                      });
+                }
             }
           }),
     );
