@@ -10,25 +10,18 @@ import 'package:firebase_database/firebase_database.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class WantToAdoptListPage extends StatefulWidget {
-  final name;
+  final id;
 
-  WantToAdoptListPage(this.name);
+  WantToAdoptListPage(this.id);
   @override
   State<StatefulWidget> createState() {
-    return new WantToAdoptListState(name);
+    return new WantToAdoptListState(id);
   }
 }
 
 class WantToAdoptListState extends State<WantToAdoptListPage> {
   final id;
   WantToAdoptListState(this.id);
-
-  var ref = FirebaseDatabase.instance
-          .reference()
-          .child("animals/"+"1"+"/interessados").onChildAdded.listen((Event event) {
-            print('${event.snapshot.value}');
-          });
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,33 +33,38 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
           backgroundColor: Color(0xff88c9bf),
         ),
         body: new StreamBuilder(
-          stream: FirebaseDatabase.instance
-          .reference()
-          .child("animals/"+this.id.toString()+"/interessados").onValue,
-          builder: (context, snap) {
-            switch (snap.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-                break;
-              default:
-                DataSnapshot snapshot = snap.data.snapshot;
-                List item = [];
-                List _list = [];
-                _list = snapshot.value;
-                _list.forEach((f) {
-                  if (f != null) {
-                    item.add(f);
+            stream: FirebaseDatabase.instance
+                .reference()
+                .child("animals/" + this.id.toString() + "/interessados")
+                .onValue,
+            builder: (context, snap) {
+              switch (snap.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: CircularProgressIndicator());
+                  break;
+                default:
+                  DataSnapshot snapshot = snap.data.snapshot;
+                  List item = [];
+                  List _list = [];
+                  _list = snapshot.value;
+                  if(_list == null){
+                    return Padding(padding: EdgeInsets.all(0),);
+                  }else{
+                    _list.forEach((f) {
+                      if (f != null) {
+                        item.add(f);
+                      }
+                    });
+                    return ListView.builder(
+                        itemCount: item.length,
+                        itemBuilder: (context, position) {
+                          return GetUserData(item[position], this.id);
+                        });
                   }
-                });
-                return ListView.builder(
-                    itemCount: item.length,
-                    itemBuilder: (context, position) {
-                      return AnimalCandidate(
-                          item[position]);
-                    });;
-            }
-          })
-        
+                  break;
+              }
+            })
+
         //new ListView.builder(
         //itemCount: 1,
         //itemBuilder: (context, position) {
@@ -78,22 +76,54 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
         //    AnimalCandidate("I3mIhMgW0la0sEtQe80BaxKzANE3", "Giordano Monteiro", name.toString().toLowerCase()),
         //  ],
         );
-    }
-    
   }
+}
+
+class GetUserData extends StatefulWidget {
+  final animalid;
+  final hashkey;
+  GetUserData(this.hashkey, this.animalid);
+
+  @override
+  State<StatefulWidget> createState() {
+    return new GetUserDataState(hashkey, animalid);
+  }
+}
+
+class GetUserDataState extends State<GetUserData> {
+  var _user = '';
+  var name = '';
+  var hashkey;
+  var animalid;
+  GetUserDataState(this.hashkey, this.animalid);
+  @override
+  Widget build(BuildContext context) {
+    getName();
+    return  AnimalCandidate(this.name, this.animalid, this.hashkey);
+  }
+
+  void getName() {
+    var user_data = FirebaseDatabase.instance
+        .reference()
+        .child("users")
+        .orderByChild("user_uid")
+        .equalTo(this.hashkey)
+        .onChildAdded
+        .listen((Event event) {
+          setState(() {
+            this.name = '${event.snapshot.value['nome_user']}';
+          });
+      });
+    }
+}
 
 class AnimalCandidate extends StatelessWidget {
   String _user;
   String name;
+  var nome_user;
+  var animalid;
   String hashkey;
-  AnimalCandidate(this.hashkey);
-  var user_data = FirebaseDatabase.instance
-          .reference()
-          .child("users")
-          .orderByChild("user_uid")
-          .equalTo("VJ7pvBFTB8RExMRdwFkZI2u8cW12").onChildAdded.listen((Event event) {
-            print('${event.snapshot.value}');
-          });
+  AnimalCandidate(this.nome_user, this.animalid, this.hashkey);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -102,32 +132,51 @@ class AnimalCandidate extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text("teste"),
-            IconButton(icon: Icon(Icons.check_circle), onPressed: (){checkAdot();
-            Navigator.of(context).pop();}),
+            Text(this.nome_user),
+            IconButton(
+                icon: Icon(Icons.check_circle),
+                onPressed: () {
+                  checkAdot();
+                  Navigator.of(context).pop();
+                }),
             Divider(),
-            IconButton(icon: Icon(Icons.close), onPressed: (){notAdot();
-            Navigator.of(context).pop();}),
+            IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  notAdot();
+                  Navigator.of(context).pop();
+                }),
           ],
         )
       ],
     );
   }
+
   void checkAdot() async {
-    final FirebaseUser user = await _auth.currentUser();
-    DocumentReference ref = Firestore.instance.collection('users').document(_user);
-    Firestore.instance
-        .collection('animals')
-        .document(name)
-        .updateData({'dono': ref, 'available': false,
-      'interessados' : []},);
+    FirebaseDatabase.instance
+    .reference()
+    .child("animals")
+    .child(this.animalid.toString())
+    .update({
+      //"id": 1,
+      //"porte": "Grande",
+      //"idade": "Adulto",
+      //"genero": "Macho",
+      //"endereco": "Guará Norte - Distrito Federel",
+      //"nome": "Bob",
+      "url": "https://firebasestorage.googleapis.com/v0/b/meau-f8464.appspot.com/o/dog1.png?alt=media&token=48ad5f98-1f41-4514-a890-fe5e7579b3f9",
+      "dono": this.hashkey,
+      "available": false,
+      "interessados": []
+    });
   }
+
   void notAdot() async {
-    final FirebaseUser user = await _auth.currentUser();
-    Firestore.instance
-        .collection('animals')
-        .document(name)
-        .setData({'interessados' : []},
-        merge: true);
+    FirebaseDatabase.instance
+    .reference()
+    .child("animals/" + this.animalid.toString())
+    .update({
+      "interessados": []
+    });
   }
 }
