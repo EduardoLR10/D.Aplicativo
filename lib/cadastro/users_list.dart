@@ -35,7 +35,10 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
         body: new StreamBuilder(
             stream: FirebaseDatabase.instance
                 .reference()
-                .child("animals/" + this.id.toString() + "/interessados")
+                .child("animals")
+                .child(this.id.toString())
+                .child("interessados")
+                .orderByChild("user_uid")
                 .onValue,
             builder: (context, snap) {
               switch (snap.connectionState) {
@@ -52,13 +55,13 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
                   }else{
                     _list.forEach((f) {
                       if (f != null) {
-                        item.add(f);
+                        item.add(f['user_uid']);
                       }
                     });
                     return ListView.builder(
                         itemCount: item.length,
                         itemBuilder: (context, position) {
-                          return GetUserData(item[position], this.id);
+                          return GetUserData(item[position], this.id, position);
                         });
                   }
                   break;
@@ -82,28 +85,29 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
 class GetUserData extends StatefulWidget {
   final animalid;
   final hashkey;
-  GetUserData(this.hashkey, this.animalid);
+  final interestedid;
+  GetUserData(this.hashkey, this.animalid, this.interestedid);
 
   @override
   State<StatefulWidget> createState() {
-    return new GetUserDataState(hashkey, animalid);
+    return new GetUserDataState(hashkey, animalid, interestedid);
   }
 }
 
 class GetUserDataState extends State<GetUserData> {
-  var _user = '';
   var name = '';
   var hashkey;
   var animalid;
-  GetUserDataState(this.hashkey, this.animalid);
+  var interestedid;
+  GetUserDataState(this.hashkey, this.animalid, this.interestedid);
   @override
   Widget build(BuildContext context) {
     getName();
-    return  AnimalCandidate(this.name, this.animalid, this.hashkey);
+    return  AnimalCandidate(this.name, this.animalid, this.interestedid, this.hashkey);
   }
 
   void getName() {
-    var user_data = FirebaseDatabase.instance
+    FirebaseDatabase.instance
         .reference()
         .child("users")
         .orderByChild("user_uid")
@@ -118,12 +122,12 @@ class GetUserDataState extends State<GetUserData> {
 }
 
 class AnimalCandidate extends StatelessWidget {
-  String _user;
   String name;
   var nome_user;
   var animalid;
+  var interestedid;
   String hashkey;
-  AnimalCandidate(this.nome_user, this.animalid, this.hashkey);
+  AnimalCandidate(this.nome_user, this.animalid, this.interestedid, this.hashkey);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -158,13 +162,6 @@ class AnimalCandidate extends StatelessWidget {
     .child("animals")
     .child(this.animalid.toString())
     .update({
-      //"id": 1,
-      //"porte": "Grande",
-      //"idade": "Adulto",
-      //"genero": "Macho",
-      //"endereco": "Guará Norte - Distrito Federel",
-      //"nome": "Bob",
-      "url": "https://firebasestorage.googleapis.com/v0/b/meau-f8464.appspot.com/o/dog1.png?alt=media&token=48ad5f98-1f41-4514-a890-fe5e7579b3f9",
       "dono": this.hashkey,
       "available": false,
       "interessados": []
@@ -174,9 +171,10 @@ class AnimalCandidate extends StatelessWidget {
   void notAdot() async {
     FirebaseDatabase.instance
     .reference()
-    .child("animals/" + this.animalid.toString())
-    .update({
-      "interessados": []
-    });
+    .child("animals")
+    .child(this.animalid.toString())
+    .child("interessados")
+    .child(this.interestedid.toString())
+    .remove();
   }
 }
