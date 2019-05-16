@@ -35,7 +35,7 @@ class AdotarState2 extends State<Adotar2> {
   var size;
   var location;
 
-  var click = false;
+  var existence = false;
 
   AdotarState2(this.name, this.id, this.imagename, this.genre, this.size, this.status,
       this.location);
@@ -452,7 +452,6 @@ class AdotarState2 extends State<Adotar2> {
                         Navigator.pushNamed(context, 'LOGINPAGE');
                       }
                       else {
-                        click = true;
                         checkanimals();
                       }
                     });
@@ -496,31 +495,10 @@ class AdotarState2 extends State<Adotar2> {
     );
   }
 
-  StreamBuilder _checkanimals() {
-    //print(name);
-    return StreamBuilder(
-        stream: Firestore.instance
-            .collection('animals')
-            .where('nome', isEqualTo: name.toString())
-            .snapshots()
-            .map((snap) => snap.documents.map((snap) => snap.data)),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              print("carregando");
-              break;
-            default:
-              print(snapshot.data.toString());
-              return new Text("teste");
-              break;
-          }
-        });
-  }
-
   void checkanimals() async {
     //print(name);
-    final FirebaseUser user = await _auth.currentUser();
     var size = 0;
+    final FirebaseUser user = await _auth.currentUser();
     //print(this.id.toString());
     FirebaseDatabase.instance
     .reference()
@@ -530,24 +508,49 @@ class AdotarState2 extends State<Adotar2> {
     .once()
     .then((onValue){
       List data = onValue.value;
-      //print("testeeeeeeeeeeeeeeeeeeeee" + data.toString());
-      if(data == null){
-        size = 0;
-      }else{
-        size = data.length;
+      checkExistence();
+      if(this.existence == false){
+        if(data == null){
+          size = 0;
+        }else{
+          size = data.length;
+        }
+        print(size);
+        FirebaseDatabase.instance
+        .reference()
+        .child("animals")
+        .child(this.id.toString())
+        .child("interessados/" + size.toString())
+        .set({
+          "id": size,
+          "user_uid": user.uid
+        }).whenComplete((){
+          print('passei por aqui');
+        });
       }
-      print(size);
-      FirebaseDatabase.instance
-      .reference()
-      .child("animals")
-      .child(this.id.toString())
-      .child("interessados/" + size.toString())
-      .set({
-        "id": size,
-        "user_uid": user.uid
-      }).whenComplete((){
-        print('passei por aqui');
-      });
+    });
+  }
+  void checkExistence() async {
+    final FirebaseUser user = await _auth.currentUser();
+    FirebaseDatabase.instance
+    .reference()
+    .child("animals")
+    .child(this.id.toString())
+    .child("interessados")
+    .orderByChild("user_uid")
+    .equalTo(user.uid)
+    .once()
+    .then((onValue){
+      List data = onValue.value;
+      if(data == null){
+        setState(() {
+          this.existence = false;
+        });
+      }else{
+        setState(() {
+          this.existence = true;
+        });
+      }
     });
   }
 }
