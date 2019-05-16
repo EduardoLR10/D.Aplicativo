@@ -216,7 +216,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
         "nome_user": user.displayName,
         "profile_photo": user.photoUrl,
         "user_uid": user.uid,
-        "token": '0',
+        "token": _token,
       });
 
     final FirebaseUser currentUser = await _auth.currentUser();
