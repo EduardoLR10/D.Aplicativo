@@ -18,7 +18,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 			var token;
 
 			if(!user.exists)
-				return 1;
+				return null;
 
 			else{
 				token = user.val().token;
@@ -74,7 +74,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 						{
 							if(newValue.interessados[rem_id].user_uid != previousValue.interessados[rem_id].user_uid)
 								break;
-							
+
 							rem_id ++;
 						}
 
@@ -109,57 +109,51 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 			}) // ref_dono
 	}) // onUpdate
 
-//exports.interesseTrigger = functions.firestore.document(
-//	'animals/{animalId}').onUpdate((change,context) => {
-//		const newValue = change.after.data();
-//
-//		const previousValue = change.before.data();
-//
-//		admin.firestore().collection('users').doc(newValue.dono.id).get().then(doc => {
-//			var token;
-//
-//			if(!doc.exists) {
-//				console.log('Sem dono');
-//			}
-//			else {
-//				token = doc.data().token;
-//
-//				if (newValue.available != previousValue.available)/]
-//				{
-//					var payload = {
-//						"notification": {
-//							"title": "Confirmada a sua adoção do pet " + newValue.nome,
-//							"body": "Boa sorte!",
-//						},
-//						"data": {
-//							"sound": "default",
-//							"click_action" : "FLUTTER_NOTIFICATION_CLICK",
-//							"screen" : "MYPETSPAGE",
-//						}
-//					}
-//					return admin.messaging().sendToDevice (token, payload).then((response) => {
-//						console.log('Enviada notificação');
-//					}).catch((err) => {
-//						console.log(err);})
-//				}
-//				else
-//				{
-//					var payload = {
-//						"notification": {
-//							"title": "Mudança em interessado no seu pet " + newValue.nome,
-//							"body": "Por favor, verificar interessados",
-//						},
-//						"data": {
-//							"sound": "default",
-//							"click_action" : "FLUTTER_NOTIFICATION_CLICK",
-//							"screen" : "MYPETSPAGE",
-//						}
-//					}
-//					return admin.messaging().sendToDevice (token, payload).then((response) => {
-//						console.log('Enviada notificação');
-//					}).catch((err) => {
-//						console.log(err);})
-//				}
-//			}
-//		})
-//	})
+exports.interessadoTrigger = functions.database.ref('animals/{animalId}/interessados/{interessadoId}')
+.onWrite((change,context) => {
+
+	animalNome = admin.database().ref('animals/{animalId}').on('value',
+		function(animal) { 
+			var animalNome = animal.val().nome;
+			var ref_dono = 'users/' + animal.val().dono;
+
+			if (change.before.exists())
+			{
+				if (!(change.after.exists())) //removido
+				{
+					const previousValue = change.before.val();
+
+					var ref_inter = 'users/' + previousValue.user_uid;
+
+					admin.database().ref(ref_inter).on('value',
+						function(interessado) {
+
+							token = interessado.val().token;
+							var payload = {
+								"notification": {
+									"title": "Pedido de adocao cancelado ",
+									"body": "Não aceito seu pedido de adoção de " + animalNome,
+								},
+								"data": {
+									"sound": "default",
+									"click_action" : "FLUTTER_NOTIFICATION_CLICK",
+									"screen" : "ADOTARPAGE1",
+								}
+							} // payload
+
+							admin.messaging().sendToDevice (token, payload).then((response) => {
+								console.log('Enviada notificação');
+							}).catch((err) => {
+								console.log(err);})
+
+						})
+				}
+				return null;
+			} // se existia
+
+			else
+			{
+				return null;
+			}
+	}) // animal
+}) // onWrite
