@@ -520,7 +520,8 @@ class AdotarState2 extends State<Adotar2> {
   void checkanimals() async {
     //print(name);
     final FirebaseUser user = await _auth.currentUser();
-    var size = 0;
+    var new_id = 0;
+    int counter = 0;
     //print(this.id.toString());
     FirebaseDatabase.instance
     .reference()
@@ -530,20 +531,26 @@ class AdotarState2 extends State<Adotar2> {
     .once()
     .then((onValue){
       List data = onValue.value;
-      //print("testeeeeeeeeeeeeeeeeeeeee" + data.toString());
+      print("testeeeeeeeeeeeeeeeeeeeee " + data[counter]['id'].toString());
       if(data == null){
-        size = 0;
+        new_id = 0;
       }else{
-        size = data.length;
+        while(counter < data.length)
+        {
+          if(data[counter] == null)
+            break;
+          counter ++;
+        }
+        new_id = counter;
       }
-      print(size);
+      print(new_id);
       FirebaseDatabase.instance
       .reference()
       .child("animals")
       .child(this.id.toString())
-      .child("interessados/" + size.toString())
+      .child("interessados/" + new_id.toString())
       .set({
-        "id": size,
+        "id": new_id,
         "user_uid": user.uid
       }).whenComplete((){
         print('passei por aqui');

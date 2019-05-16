@@ -68,7 +68,17 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 
 					else if (newValue.interessados != null && newValue.interessados.length < previousValue.interessados.length)
 					{
-						var ref_inter = 'users/' + previousValue.interessados[previousValue.interessados.length - 1].user_uid;
+						var rem_id = 0;
+
+						while (rem_id < newValue.interessados.length)
+						{
+							if(newValue.interessados[rem_id].user_uid != previousValue.interessados[rem_id].user_uid)
+								break;
+							
+							rem_id ++;
+						}
+
+						var ref_inter = 'users/' + previousValue.interessados[rem_id].user_uid;
 
 						admin.database().ref(ref_inter).on('value',
 							function(interessado) {
