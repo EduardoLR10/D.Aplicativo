@@ -30,7 +30,7 @@ exports.interesseTrigger = functions.firestore.document(
 						"data": {
 							"sound": "default",
 							"click_action" : "FLUTTER_NOTIFICATION_CLICK",
-							"screen" : "ADOTARPAGE1",
+							"screen" : "MYPETSPAGE",
 						}
 					}
 					return admin.messaging().sendToDevice (token, payload).then((response) => {
@@ -42,13 +42,13 @@ exports.interesseTrigger = functions.firestore.document(
 				{
 					var payload = {
 						"notification": {
-							"title": "Novo interessado no seu pet " + newValue.nome,
+							"title": "Mudança em interessado no seu pet " + newValue.nome,
 							"body": "Por favor, verificar interessados",
 						},
 						"data": {
 							"sound": "default",
 							"click_action" : "FLUTTER_NOTIFICATION_CLICK",
-							"screen" : "ADOTARPAGE1",
+							"screen" : "MYPETSPAGE",
 						}
 					}
 					return admin.messaging().sendToDevice (token, payload).then((response) => {

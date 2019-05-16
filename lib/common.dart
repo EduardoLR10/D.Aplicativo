@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
+var user;
+
 class MyDrawer extends StatefulWidget {
   @override
   MyDrawerState createState() => MyDrawerState();
@@ -21,6 +23,7 @@ class MyDrawerState extends State<MyDrawer> {
   }
 
   doAsyncStuff() async {
+    user = await _auth.currentUser();
     FirebaseUser currentUser = await _auth.currentUser();
     if (currentUser == null) {
       setState(() {

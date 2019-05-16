@@ -6,6 +6,9 @@ import '../cadastro/users_list.dart';
 import '../entitys/animal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+import 'dart:async';
 
 class AdotarPage extends StatefulWidget {
   @override
@@ -15,7 +18,7 @@ class AdotarPage extends StatefulWidget {
 }
 
 class AdotarState extends State<AdotarPage> {
-  final index = 1.0;
+  //StreamSubscription<Event> ref2;
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +29,14 @@ class AdotarState extends State<AdotarPage> {
         backgroundColor: Color(0xFFffd358),
       ),
       body: new StreamBuilder(
-          stream: Firestore.instance
-              .collection('animals')
-              .where('available', isEqualTo: true)
-              .snapshots()
-              .map((snap) => snap.documents.map((document) {
-                    var ref = document.data['interessados']
-                        .map((interessado) => interessado.path);
-                    document.data['interessados'] = ref;
-                    return document.data;
-                  })),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
+          stream: FirebaseDatabase.instance
+              .reference()
+              .child("animals")
+              .orderByChild("available")
+              .equalTo(true)
+              .onValue,
+          builder: (context, snap) {
+            switch (snap.connectionState) {
               case ConnectionState.waiting:
                 //print("carregando");
                 return Center(child: CircularProgressIndicator());
@@ -45,32 +44,32 @@ class AdotarState extends State<AdotarPage> {
               default:
                 //print(snapshot.data.toString());
                 //return new Text("teste");
+                if(snap.data.snapshot == null){
+                  print('dei null');
+                }
+                DataSnapshot snapshot = snap.data.snapshot;
+                List item = [];
+                List _list = [];
+//it gives all the documents in this list.
+                _list = snapshot.value;
+                _list.forEach((f) {
+                  if (f != null) {
+                    item.add(f);
+                  }
+                });
+                //print(item.length);
                 return ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: item.length,
                     itemBuilder: (context, position) {
                       return AnimalCard(
-                          snapshot.data.elementAt(position)['nome'],
-                          snapshot.data.elementAt(position)['url'],
-                          snapshot.data
-                              .elementAt(position)['genero']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['idade']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['porte']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['endereco']
-                              .toString()
-                              .toUpperCase(),
-                          (snapshot.data.elementAt(position) ==
-                                  snapshot.data.last)
-                              ? 8.0
-                              : 0.0,
+                          item[position]['nome'],
+                          item[position]['url'],
+                          item[position]['id'],
+                          item[position]['genero'].toString().toUpperCase(),
+                          item[position]['idade'].toString().toUpperCase(),
+                          item[position]['porte'].toString().toUpperCase(),
+                          item[position]['endereco'].toString().toUpperCase(),
+                          (item[position] == item.last) ? 8.0 : 0.0,
                           0);
                     });
             }
@@ -88,8 +87,9 @@ class AnimalCard extends StatelessWidget {
   final location;
   final bottomcard;
   final whichpage;
+  final id;
 
-  AnimalCard(this.animalname, this.animalimagename, this.genre, this.status,
+  AnimalCard(this.animalname, this.animalimagename, this.id, this.genre, this.status,
       this.size, this.location, this.bottomcard, this.whichpage);
 
   @override
@@ -138,12 +138,14 @@ class AnimalCard extends StatelessWidget {
               new FlatButton(
                 padding: new EdgeInsets.all(0.0),
                 onPressed: () {
+                  //print(this.id);
                   if (this.whichpage == 0) {
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
                           builder: (context) => new Adotar2(
                               this.animalname,
+                              this.id,
                               this.animalimagename,
                               this.genre,
                               this.size,
@@ -155,7 +157,7 @@ class AnimalCard extends StatelessWidget {
                         context,
                         new MaterialPageRoute(
                           builder: (context) => new WantToAdoptListPage(
-                                this.animalname,
+                                this.id,
                               ),
                         ));
                   }

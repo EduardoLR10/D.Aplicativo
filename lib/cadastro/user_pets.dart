@@ -5,7 +5,8 @@ import 'cadastro_pessoal_elementos.dart';
 import '../adotar/adotar.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../common.dart';
+import '../common.dart' as userthings;
+import 'package:firebase_database/firebase_database.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -17,24 +18,6 @@ class MyPetsPage extends StatefulWidget {
 }
 
 class MyPetsPageState extends State<MyPetsPage> {
-
-  String user;
-  DocumentReference reference;
-
-  @override
-  initState() {
-    super.initState();
-    doAsyncStuff();
-    user = '';
-  }
-
-  doAsyncStuff() async {
-    FirebaseUser currentUser = await _auth.currentUser();
-    this.user = currentUser.uid;
-    this.reference = Firestore.instance.collection('users').document(user);
-    print(this.user);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,52 +28,47 @@ class MyPetsPageState extends State<MyPetsPage> {
         backgroundColor: Color(0xff88c9bf),
       ),
       body: new StreamBuilder(
-          stream: Firestore.instance
-              .collection('animals')
-              .where('dono', isEqualTo: (this.reference))
-              .snapshots()
-              .map((snap) => snap.documents.map((document) {
-                    var ref = document.data['interessados']
-                        .map((interessado) => interessado.path);
-                    document.data['interessados'] = ref;
-                    return document.data;
-                  })),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
+          stream: FirebaseDatabase.instance
+              .reference()
+              .child("animals")
+              .orderByChild("dono")
+              .equalTo(userthings.user.uid)
+              .onValue,
+          builder: (context, snap) {
+            switch (snap.connectionState) {
               case ConnectionState.waiting:
-                //print("carregando");
                 return Center(child: CircularProgressIndicator());
                 break;
               default:
-                //print(snapshot.data.toString());
-                //return new Text("teste");
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, position) {
-                      return AnimalCard(
-                          snapshot.data.elementAt(position)['nome'],
-                          snapshot.data.elementAt(position)['url'],
-                          snapshot.data
-                              .elementAt(position)['genero']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['idade']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['porte']
-                              .toString()
-                              .toUpperCase(),
-                          snapshot.data
-                              .elementAt(position)['endereco']
-                              .toString()
-                              .toUpperCase(),
-                          (snapshot.data.elementAt(position) ==
-                                  snapshot.data.last)
-                              ? 8.0
-                              : 0.0, 1);
-                    });
+                if (snap.data.snapshot.value == null) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0),
+                  );
+                } else {
+                  DataSnapshot snapshot = snap.data.snapshot;
+                  List item = [];
+                  List _list = [];
+                  _list = snapshot.value;
+                  _list.forEach((f) {
+                    if (f != null) {
+                      item.add(f);
+                    }
+                  });
+                  return ListView.builder(
+                      itemCount: item.length,
+                      itemBuilder: (context, position) {
+                        return AnimalCard(
+                            item[position]['nome'],
+                            item[position]['url'],
+                            item[position]['id'],
+                            item[position]['genero'].toString().toUpperCase(),
+                            item[position]['idade'].toString().toUpperCase(),
+                            item[position]['porte'].toString().toUpperCase(),
+                            item[position]['endereco'].toString().toUpperCase(),
+                            (item[position] == item.last) ? 8.0 : 0.0,
+                            1);
+                      });
+                }
             }
           }),
     );

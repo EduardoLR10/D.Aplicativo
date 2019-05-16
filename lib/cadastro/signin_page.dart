@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -43,10 +44,7 @@ class SignInPageState extends State<SignInPage> {
       body: Builder(builder: (BuildContext context) {
         return ListView(
           scrollDirection: Axis.vertical,
-          children: <Widget>[
-            _EmailPasswordForm(),
-            _GoogleSignInSection()
-          ],
+          children: <Widget>[_EmailPasswordForm(), _GoogleSignInSection()],
         );
       }),
     );
@@ -211,6 +209,10 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     assert(await user.getIdToken() != null);
 
     final FirebaseUser currentUser = await _auth.currentUser();
+
+    //FirebaseAuth.instance.signInWithCredential(credential).then((user) {
+    //  
+    //});
     assert(user.uid == currentUser.uid);
     setState(() {
       if (user != null) {
