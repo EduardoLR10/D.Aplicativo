@@ -16,8 +16,18 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 	admin.database().ref(ref_dono).on('value',
 		function(user) {
 			var token;
-			var newSizeInt = change.after.child(interessados).numChildren;
-			var oldSizeInt = change.before.child(interessados).numChildren;
+			var newIntList = [];
+			var oldIntList = [];
+
+			newValue.interessados.forEach( f => {
+				if (f != null)
+					newIntList.push(f);
+			})
+
+			previousValue.interessados.forEach( f => {
+				if (f != null)
+					oldIntList.push(f);
+			})
 
 
 			if(!user.exists)
@@ -25,8 +35,6 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 
 			else{
 				token = user.val().token;
-
-				console.log(newSizeInt);
 
 				if(newValue.available != previousValue.available)
 				{
@@ -49,7 +57,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 
 					} //if available
 
-					else if (newValue.interessados != null && newValue.interessados.length > previousValue.interessados.length)
+					else if (newValue.interessados != null && newIntList.length > oldIntList.length)
 					{
 						var payload = {
 							"notification": {
@@ -69,7 +77,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 							console.log(err);})
 					}
 
-					else if (newValue.interessados != null && newValue.interessados.length < previousValue.interessados.length)
+					else if (newValue.interessados != null && newIntList.length < oldIntList.length)
 					{
 						var rem_id = 0;
 
@@ -111,52 +119,3 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 				} //else
 			}) // ref_dono
 	}) // onUpdate
-
-exports.interessadoTrigger = functions.database.ref('animals/{animalId}/interessados/{interessadoId}')
-.onWrite((change,context) => {
-
-	animalNome = admin.database().ref('animals/{animalId}').on('value',
-		function(animal) { 
-			var animalNome = animal.val().nome;
-			var ref_dono = 'users/' + animal.val().dono;
-
-			if (change.before.exists())
-			{
-				if (!(change.after.exists())) //removido
-				{
-					const previousValue = change.before.val();
-
-					var ref_inter = 'users/' + previousValue.user_uid;
-
-					admin.database().ref(ref_inter).on('value',
-						function(interessado) {
-
-							token = interessado.val().token;
-							var payload = {
-								"notification": {
-									"title": "Pedido de adocao cancelado ",
-									"body": "Não aceito seu pedido de adoção de " + animalNome,
-								},
-								"data": {
-									"sound": "default",
-									"click_action" : "FLUTTER_NOTIFICATION_CLICK",
-									"screen" : "ADOTARPAGE1",
-								}
-							} // payload
-
-							admin.messaging().sendToDevice (token, payload).then((response) => {
-								console.log('Enviada notificação');
-							}).catch((err) => {
-								console.log(err);})
-
-						})
-				}
-				return null;
-			} // se existia
-
-			else
-			{
-				return null;
-			}
-	}) // animal
-}) // onWrite
