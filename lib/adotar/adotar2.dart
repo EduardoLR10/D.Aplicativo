@@ -499,6 +499,8 @@ class AdotarState2 extends State<Adotar2> {
     //print(name);
     var size = 0;
     final FirebaseUser user = await _auth.currentUser();
+    var new_id = 0;
+    int counter = 0;
     //print(this.id.toString());
     FirebaseDatabase.instance
     .reference()
