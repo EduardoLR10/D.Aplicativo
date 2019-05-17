@@ -16,6 +16,9 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 	admin.database().ref(ref_dono).on('value',
 		function(user) {
 			var token;
+			var newSizeInt = change.after.child(interessados).numChildren;
+			var oldSizeInt = change.before.child(interessados).numChildren;
+
 
 			if(!user.exists)
 				return null;
@@ -23,7 +26,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 			else{
 				token = user.val().token;
 
-				console.log(newValue.interessados.length);
+				console.log(newSizeInt);
 
 				if(newValue.available != previousValue.available)
 				{
@@ -72,7 +75,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 
 						while (rem_id < newValue.interessados.length)
 						{
-							if(newValue.interessados[rem_id].user_uid != previousValue.interessados[rem_id].user_uid)
+							if(newValue.interessados[rem_id] == null && previousValue.interessados[rem_id] != null)
 								break;
 
 							rem_id ++;
