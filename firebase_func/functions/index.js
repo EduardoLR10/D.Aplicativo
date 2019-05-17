@@ -19,15 +19,21 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 			var newIntList = [];
 			var oldIntList = [];
 
-			newValue.interessados.forEach( f => {
-				if (f != null)
-					newIntList.push(f);
-			})
+			if (newValue.interessados.exists)
+			{
+				newValue.interessados.forEach( f => {
+					if (f != null)
+						newIntList.push(f);
+				})
+			}
 
-			previousValue.interessados.forEach( f => {
-				if (f != null)
-					oldIntList.push(f);
-			})
+			if (previousValue.interessados.exists)
+			{
+				previousValue.interessados.forEach( f => {
+					if (f != null)
+						oldIntList.push(f);
+				})
+			}
 
 
 			if(!user.exists)
@@ -71,22 +77,27 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 							}
 						} // payload
 
+						console.log(token);
+
 						admin.messaging().sendToDevice (token, payload).then((response) => {
 							console.log('Enviada notificação');
 						}).catch((err) => {
 							console.log(err);})
 					}
 
-					else if (newValue.interessados != null && newIntList.length < oldIntList.length)
+					else if (newIntList.length < oldIntList.length)
 					{
 						var rem_id = 0;
 
-						while (rem_id < newValue.interessados.length)
+						if (newIntList.length != 0)
 						{
-							if(newValue.interessados[rem_id] == null && previousValue.interessados[rem_id] != null)
-								break;
+							while (rem_id < newValue.interessados.length)
+							{
+								if(newValue.interessados[rem_id] == null && previousValue.interessados[rem_id] != null)
+									break;
 
-							rem_id ++;
+								rem_id ++;
+							}
 						}
 
 						var ref_inter = 'users/' + previousValue.interessados[rem_id].user_uid;
