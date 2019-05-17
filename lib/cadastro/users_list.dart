@@ -61,7 +61,7 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
                             .update({"available": true});
                         Navigator.of(context).pop();
                       },
-                      child: new Text("HABILITAR ADOÇÃO"),
+                      child: HabilitButt(name: TextButHabilit("HABILITAR ADOÇÃO")),
                     ));
                   } else {
                     _list.forEach((f) {
@@ -185,5 +185,56 @@ class AnimalCandidate extends StatelessWidget {
         .child("interessados")
         .child(this.interestedid.toString())
         .remove();
+  }
+}
+
+class HabilitButt extends StatelessWidget {
+  HabilitButt({this.name});
+
+  final Widget name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44.0,
+      width: 232.0,
+      decoration: BoxDecoration(
+        boxShadow: [BoxShadow(
+          color: Colors.black38,
+          blurRadius: 1.0,
+          spreadRadius: 1.0,
+          offset: Offset(
+            0.0,
+            1.0,
+          ),
+        )
+        ],
+        borderRadius: BorderRadius.circular(2.0),
+        color: Color(0xff88c9bf),
+      ),
+      child: Center(
+        child: name,
+      ),
+    );
+  }
+}
+class TextButHabilit extends StatelessWidget {
+  TextButHabilit(this.string);
+
+  final String string;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text (
+      string,
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontFamily: 'Robotto',
+        color: Color(0xff434343),
+        fontWeight: FontWeight.w500,
+        fontSize: 14.0,
+      ),
+    );
   }
 }

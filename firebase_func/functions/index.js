@@ -42,7 +42,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 			else{
 				token = user.val().token;
 
-				if(newValue.available != previousValue.available)
+				if(newValue.available != previousValue.available && previousValue.available == true)
 				{
 					var payload = {
 						"notification": {
