@@ -50,9 +50,20 @@ class WantToAdoptListState extends State<WantToAdoptListPage> {
                   List item = [];
                   List _list = [];
                   _list = snapshot.value;
-                  if(_list == null){
-                    return Padding(padding: EdgeInsets.all(0),);
-                  }else{
+                  if (_list == null) {
+                    return new Center(
+                        child: new FlatButton(
+                      onPressed: () async {
+                        FirebaseDatabase.instance
+                            .reference()
+                            .child("animals")
+                            .child(this.id.toString())
+                            .update({"available": true});
+                        Navigator.of(context).pop();
+                      },
+                      child: new Text("HABILITAR ADOÇÃO"),
+                    ));
+                  } else {
                     _list.forEach((f) {
                       if (f != null) {
                         item.add(f['user_uid']);
@@ -103,7 +114,8 @@ class GetUserDataState extends State<GetUserData> {
   @override
   Widget build(BuildContext context) {
     getName();
-    return  AnimalCandidate(this.name, this.animalid, this.interestedid, this.hashkey);
+    return AnimalCandidate(
+        this.name, this.animalid, this.interestedid, this.hashkey);
   }
 
   void getName() {
@@ -114,11 +126,11 @@ class GetUserDataState extends State<GetUserData> {
         .equalTo(this.hashkey)
         .onChildAdded
         .listen((Event event) {
-          setState(() {
-            this.name = '${event.snapshot.value['nome_user']}';
-          });
+      setState(() {
+        this.name = '${event.snapshot.value['nome_user']}';
       });
-    }
+    });
+  }
 }
 
 class AnimalCandidate extends StatelessWidget {
@@ -127,7 +139,8 @@ class AnimalCandidate extends StatelessWidget {
   var animalid;
   var interestedid;
   String hashkey;
-  AnimalCandidate(this.nome_user, this.animalid, this.interestedid, this.hashkey);
+  AnimalCandidate(
+      this.nome_user, this.animalid, this.interestedid, this.hashkey);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -158,23 +171,19 @@ class AnimalCandidate extends StatelessWidget {
 
   void checkAdot() async {
     FirebaseDatabase.instance
-    .reference()
-    .child("animals")
-    .child(this.animalid.toString())
-    .update({
-      "dono": this.hashkey,
-      "available": false,
-      "interessados": []
-    });
+        .reference()
+        .child("animals")
+        .child(this.animalid.toString())
+        .update({"dono": this.hashkey, "available": false, "interessados": []});
   }
 
   void notAdot() async {
     FirebaseDatabase.instance
-    .reference()
-    .child("animals")
-    .child(this.animalid.toString())
-    .child("interessados")
-    .child(this.interestedid.toString())
-    .remove();
+        .reference()
+        .child("animals")
+        .child(this.animalid.toString())
+        .child("interessados")
+        .child(this.interestedid.toString())
+        .remove();
   }
 }

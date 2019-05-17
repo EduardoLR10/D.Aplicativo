@@ -44,34 +44,35 @@ class AdotarState extends State<AdotarPage> {
               default:
                 //print(snapshot.data.toString());
                 //return new Text("teste");
-                if(snap.data.snapshot == null){
-                  print('dei null');
-                }
                 DataSnapshot snapshot = snap.data.snapshot;
                 List item = [];
                 List _list = [];
 //it gives all the documents in this list.
                 _list = snapshot.value;
-                _list.forEach((f) {
-                  if (f != null) {
-                    item.add(f);
-                  }
-                });
-                //print(item.length);
-                return ListView.builder(
-                    itemCount: item.length,
-                    itemBuilder: (context, position) {
-                      return AnimalCard(
-                          item[position]['nome'],
-                          item[position]['url'],
-                          item[position]['id'],
-                          item[position]['genero'].toString().toUpperCase(),
-                          item[position]['idade'].toString().toUpperCase(),
-                          item[position]['porte'].toString().toUpperCase(),
-                          item[position]['endereco'].toString().toUpperCase(),
-                          (item[position] == item.last) ? 8.0 : 0.0,
-                          0);
-                    });
+                if(_list == null){
+                  return new Padding(padding: EdgeInsets.all(0.0));
+                }else{
+                  _list.forEach((f) {
+                    if (f != null) {
+                      item.add(f);
+                    }
+                  });
+                  //print(item.length);
+                  return ListView.builder(
+                      itemCount: item.length,
+                      itemBuilder: (context, position) {
+                        return AnimalCard(
+                            item[position]['nome'],
+                            item[position]['url'],
+                            item[position]['id'],
+                            item[position]['genero'].toString().toUpperCase(),
+                            item[position]['idade'].toString().toUpperCase(),
+                            item[position]['porte'].toString().toUpperCase(),
+                            item[position]['endereco'].toString().toUpperCase(),
+                            (item[position] == item.last) ? 8.0 : 0.0,
+                            0);
+                      });
+                }
             }
           }),
     );
