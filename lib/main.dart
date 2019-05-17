@@ -73,6 +73,9 @@ class IntroState extends State<IntroPage> {
   void initState() {
     super.initState();
 
+    _messaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+
     _messaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print("onMessage: $message");
@@ -88,9 +91,6 @@ class IntroState extends State<IntroPage> {
         pushPageNot(message["data"]["screen"]);
       },
     );
-
-    _messaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
 
   Future onSelectNotification(String title, String body, String screen) async {

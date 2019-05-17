@@ -178,6 +178,9 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   void initState() {
     super.initState();
+    _messaging.onTokenRefresh.listen((token){setState(() {
+      _token = token;
+    });});
     _messaging.getToken().then((token) {setState(() {
       _token = token;
     });});
