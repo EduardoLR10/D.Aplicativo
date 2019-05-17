@@ -19,7 +19,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 			var newIntList = [];
 			var oldIntList = [];
 
-			if (newValue.interessados.exists)
+			if (newValue.interessados != null)
 			{
 				newValue.interessados.forEach( f => {
 					if (f != null)
@@ -27,7 +27,7 @@ exports.notificacaoTrigger = functions.database.ref('animals/{animalId}')
 				})
 			}
 
-			if (previousValue.interessados.exists)
+			if (previousValue.interessados != null)
 			{
 				previousValue.interessados.forEach( f => {
 					if (f != null)
